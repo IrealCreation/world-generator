@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\SriKahn\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\SriKahn\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_.19.00" t="ExcludeRecursive" />
+    <e p="C:\Users\SriKahn\Documents\UnityProjects\Mostly Civilized" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="CameraController.cs" t="Include" />
+          <e p="City.cs" t="Include" />
+          <e p="CityJob.cs" t="Include" />
+          <e p="Hex.cs" t="Include" />
+          <e p="HexBehaviour.cs" t="Include" />
+          <e p="HexMap.cs" t="Include" />
+          <e p="HexMap_Continent.cs" t="Include" />
+          <e p="KeyboardController.cs" t="Include" />
+          <e p="MapObject.cs" t="Include" />
+          <e p="MouseController.cs" t="Include" />
+          <e p="Pointer.cs" t="Include" />
+          <e p="QPath" t="Include">
+            <e p="IQPathTile.cs" t="Include" />
+            <e p="IQPathUnit.cs" t="Include" />
+            <e p="IQPathWorld.cs" t="Include" />
+            <e p="PathfindingPriorityQueue.cs" t="Include" />
+            <e p="Priority Queue" t="Include">
+              <e p="FastPriorityQueue.cs" t="Include" />
+              <e p="FastPriorityQueueNode.cs" t="Include" />
+              <e p="GenericPriorityQueue.cs" t="Include" />
+              <e p="GenericPriorityQueueNode.cs" t="Include" />
+              <e p="IFixedSizePriorityQueue.cs" t="Include" />
+              <e p="IPriorityQueue.cs" t="Include" />
+              <e p="Properties" t="Include">
+                <e p="AssemblyInfo.cs" t="Include" />
+              </e>
+              <e p="SimplePriorityQueue.cs" t="Include" />
+              <e p="StablePriorityQueue.cs" t="Include" />
+              <e p="StablePriorityQueueNode.cs" t="Include" />
+            </e>
+            <e p="QPath.cs" t="Include" />
+            <e p="QPath_AStar.cs" t="Include" />
+            <e p="QPathTileGraph.cs" t="Include" />
+          </e>
+          <e p="River.cs" t="Include" />
+          <e p="UI" t="Include">
+            <e p="BuildCityButton.cs" t="Include" />
+            <e p="Nameplate.cs" t="Include" />
+            <e p="NameplateController.cs" t="Include" />
+            <e p="UnitSelectionPanel.cs" t="Include" />
+          </e>
+          <e p="Unit.cs" t="Include" />
+          <e p="UnitView.cs" t="Include" />
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
