@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class HexMap_Continent : HexMap
 {
@@ -10,8 +12,8 @@ public class HexMap_Continent : HexMap
 	public int minRangeLands = 8;
 	public int maxRangeLands = 12;
 
-	private float coastElevation = -0.6f;
-	private float hillElevation = 0.6f;
+	private float coastElevation = -0.5f;
+	private float hillElevation = 0.55f;
 	private float mountainElevation = 0.9f;
     
     override public void GenerateMap(int seed = 0) {
@@ -22,8 +24,6 @@ public class HexMap_Continent : HexMap
 	    
 	    Debug.Log("Map seed: " + seed);
 	    Random.InitState(seed);
-//	    Random.InitState(756);
-//	    Random.InitState(833121);
 
     	// Call the base version to make all the hexes needed as a giant ocean
     	base.GenerateMap();
@@ -123,9 +123,6 @@ public class HexMap_Continent : HexMap
         
         // Log some stats concerning the map
         LogStats();
-
-    	// Update hex visuals to match data
-        UpdateHexVisuals();
     		
     }
 
@@ -393,7 +390,7 @@ public class HexMap_Continent : HexMap
 	                //Unlocks the "high temperature" biomes
 	                tropicalScore = (h.Temperature + h.Moisture) / 2;
 	                savannaScore = (h.Temperature + (1f - Mathf.Abs(h.Moisture - 0.5f))) / 2;
-	                desertScore = (h.Temperature * 0.5f + (Mathf.Pow(1f - h.Moisture, 2) * 1.3f) * 1.5f) / 2;
+	                desertScore = (h.Temperature * 0.5f + (Mathf.Pow(1f - h.Moisture, 2) * 1.5f) * 1.5f) / 2;
                 }
 
                 if (h.Temperature > 0.2f && h.Temperature < 0.8f)
@@ -717,10 +714,21 @@ public class HexMap_Continent : HexMap
 	    int landTiles = 0;
 	    int waterTiles = 0;
 	    float totalMoisture = 0f;
+	    Dictionary<string, int> biomes = new Dictionary<string, int>();
+	    Dictionary<string, int> reliefs = new Dictionary<string, int>();
 	    
 	    foreach (Hex h in hexes)
 	    {
 		    tileCount++;
+		    
+		    if(!biomes.ContainsKey(h.BiomeName))
+			    biomes.Add(h.BiomeName, 0);
+		    biomes[h.BiomeName]++;
+		    
+		    if(!reliefs.ContainsKey(h.ReliefName))
+			    reliefs.Add(h.ReliefName, 0);
+		    reliefs[h.ReliefName]++;
+		    
 		    if (h.Elevation > 0)
 		    {
 			    totalMoisture += h.Moisture;
@@ -734,5 +742,13 @@ public class HexMap_Continent : HexMap
 
 	    Debug.Log("--- Map Stats ---");
 	    Debug.Log("Average Moisture: " + totalMoisture / landTiles);
+	    foreach (KeyValuePair<string, int> entry in biomes)
+	    {
+		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
+	    }
+	    foreach (KeyValuePair<string, int> entry in reliefs)
+	    {
+		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
+	    }
     }
 }

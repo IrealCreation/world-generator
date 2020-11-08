@@ -8,8 +8,6 @@ namespace QPath {
 
 		IQPathTile GetTileAt(int x, int y);
 
-		IQPathTile[] GetAllTiles();
-
 	}
 
 }

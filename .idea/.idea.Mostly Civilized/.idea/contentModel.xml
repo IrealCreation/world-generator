@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\SriKahn\.Rider2019.1\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\SriKahn\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_Mostly Civilized.-1254828298.00" t="ExcludeRecursive" />
+    <e p="C:\Users\SriKahn\AppData\local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\SriKahn\AppData\local\JetBrains\Rider2020.2\resharper-host\local\Transient\Rider\v202\SolutionCaches\_Mostly Civilized.-1254828298.00" t="ExcludeRecursive" />
     <e p="C:\Users\SriKahn\Documents\UnityProjects\Mostly Civilized" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
@@ -19,6 +19,7 @@
           <e p="InputController.cs" t="Include" />
           <e p="MapObject.cs" t="Include" />
           <e p="MenuController.cs" t="Include" />
+          <e p="People.cs" t="Include" />
           <e p="Pointer.cs" t="Include" />
           <e p="QPath" t="Include">
             <e p="IQPathTile.cs" t="Include" />
@@ -45,6 +46,7 @@
             <e p="QPathTileGraph.cs" t="Include" />
           </e>
           <e p="River.cs" t="Include" />
+          <e p="Structure.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BuildCityButton.cs" t="Include" />
             <e p="Nameplate.cs" t="Include" />

@@ -32,6 +32,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     public Material MatTemperate;
     public Material MatTaiga;
     public Material MatTundra;
+    public Material MatUnexplored;
 
     protected Hex[,] hexes;
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
@@ -39,8 +40,10 @@ public class HexMap : MonoBehaviour, IQPathWorld
     protected Edge[,,,] edges; //[a.col, a.row, b.col, b.row]
     
     protected List<River> rivers;
-    private List<Unit> units;
-    private List<City> cities;
+    private List<Unit> units; // TODO: put it in People
+    private List<City> cities; // TODO: put it in People
+    private List<People> peoples;
+    private int currentPeopleID;
 
     //DEPRECATED
     Pointer pointer;
@@ -54,7 +57,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     // Start is called before the first frame update
     void Start()
     {
-        GenerateMap();
+	    StartGame();
     }
 
     void Update() {
@@ -65,9 +68,26 @@ public class HexMap : MonoBehaviour, IQPathWorld
         }
     }
 
+    public void StartGame(int seed = 0)
+    {
+	    // Generate the map
+	    if(seed != 0)
+			GenerateMap(seed);
+	    else
+		    GenerateMap();
+        
+	    // Create the peoples
+	    peoples = new List<People>();
+	    peoples.Add(new People("Testeurs", true, this));
+	    currentPeopleID = 0;
+
+	    // Update hex visuals to match data
+	    UpdateHexVisuals();
+    }
+
     public void NextTurn() {
 	    
-	    //TODO : check if a unit is waiting for order and go to it
+	    //TODO: render map depending on CurrentPeople (see UpdateHexVisuals)
 	    
 	    inputController.SelectedUnit = null;
 	    inputController.SelectedCity = null;
@@ -168,8 +188,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	        rivers = new List<River>();
         }
         
-    	
-    	//UpdateHexVisuals(); //Called by HexMap_Continent
+        //UpdateHexVisuals(); //Called by HexMap_Continent
 
         // Put the pointer on the map
         /*this.pointer = new Pointer();
@@ -192,13 +211,9 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    {
 		    Destroy(hexToGameObjectMap[hex]);
 	    }
-	    GenerateMap(seed);
+	    StartGame(seed);
     }
 
-    public IQPathTile[] GetAllTiles() {
-        //return hexes;
-        return null;
-    }
     public IQPathTile GetTileAt(int x, int y) {
         return GetHexAt(x, y);
     }
@@ -223,6 +238,17 @@ public class HexMap : MonoBehaviour, IQPathWorld
     	return hexes[q, r];
     }
 
+    public List<Hex> GetAllHexes()
+    {
+	    // Maybe this method won't be necessary later
+	    List<Hex> hexList = new List<Hex>();
+	    foreach (Hex h in hexes)
+	    {
+		    hexList.Add(h);
+	    }
+	    return hexList;
+    }
+
     public Edge GetEdgeAt(int qA, int rA, int qB, int rB)
     {
 	    if (qA < 0)
@@ -243,91 +269,13 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    return edges[qA, rA, qB, rB];
     }
 
-    public void DrawRiver_Old(River river)
+    public People CurrentPeople()
     {
-	    GameObject go = (GameObject) Instantiate(RiverBranchPrefab, river.Source.HexA.hexGO.transform.position, Quaternion.identity,
-		    river.Source.HexA.hexGO.transform);
-	    LineRenderer lineRenderer = go.GetComponentInChildren<LineRenderer>();
-	    
-	    Vector3[] positions = new Vector3[river.Path.Length + 1];
-
-	    Vector3[] prevPos = river.Source.Positions(new Vector3(0, 0.05f, 0));
-	    int i = 0;
-	    
-	    foreach (Edge edge in river.Path)
-	    {
-		    //Debug.Log("Edge " + edge);
-		    i++;
-		    if (i == 1)
-		    {
-			    // First iteration: skip the source to compare it next turn
-			    continue;
-		    }
-	    
-		    // TODO: create if necessary multiple lineRenderers to hide the river near lakes
-
-		    if (edge.HexA.Elevation < 0 || edge.HexB.Elevation < 0)
-		    {
-			    // It's a lake: complete the current lineRenderer and draw a new one
-			    if (positions[0] != null)
-			    {
-				    
-			    }
-		    }
-		    
-		    // Find the position difference between the two hexes in game world
-		    Vector3 hexDif = Hex.WorldDistance(river.Source.HexA, edge.HexA);
-		    //Debug.Log("Position of " + edge.HexA + " : " + edge.HexA.Position() + ". Position of " + edge.HexB + " : " + edge.HexB.Position() + ". Dif :" + hexDif);
-		    
-		    // Get the positions of this edge, offset by the hexDif and some height
-		    Vector3[] edgePos = edge.Positions(new Vector3(0, 0.05f, 0) + hexDif);
-
-		    if (i == 2)
-		    {
-			    // Second iteration: compare the source and its next edge in order to find the origin of the river
-			    if (Vector3.Distance(prevPos[1], edgePos[0]) < 0.01 || Vector3.Distance(prevPos[1], edgePos[1]) < 0.01)
-			    {
-				    positions[0] = prevPos[0];
-				    positions[1] = prevPos[1];
-			    }
-			    else
-			    {
-				    positions[0] = prevPos[1];
-				    positions[1] = prevPos[0];
-			    }
-		    }
-
-		    /*Debug.Log("Comparison between " + prevPos[0] + " and " + edgePos[0] + " = " +
-		              Vector3.Distance(prevPos[0], edgePos[0]));
-		    if (Vector3.Distance(prevPos[0], edgePos[0]) < 0.01)
-		    {
-			    Debug.Log(edgePos[1] + " added!");
-		    }
-		    Debug.Log("Comparison between " + prevPos[0] + " and " + edgePos[1] + " = " +
-		              Vector3.Distance(prevPos[0], edgePos[1]));
-		    if (Vector3.Distance(prevPos[0], edgePos[1]) < 0.01)
-		    {
-			    Debug.Log(edgePos[1] + " added!");
-		    }*/
-		    
-		    // Only add the coordinates that haven't been previously registered
-		    if (Vector3.Distance(prevPos[0], edgePos[0]) < 0.01 || Vector3.Distance(prevPos[1], edgePos[0]) < 0.01)
-		    {
-			    positions[i] = edgePos[1];
-		    }
-		    else
-		    {
-			    positions[i] = edgePos[0];
-			    //Debug.Log(edgePos[0] + " added!");
-		    }
-
-
-		    prevPos = edgePos;
-	    }
-	    
-	    lineRenderer.positionCount = positions.Length;
-	    lineRenderer.SetPositions(positions);
+	    return peoples[currentPeopleID];
     }
+    
+    
+    /*** VISUAL RENDERING ***/
     
     public void DrawRiver(River river)
     {
@@ -380,19 +328,6 @@ public class HexMap : MonoBehaviour, IQPathWorld
 			    }
 			    positions = new List<Vector3>();
 		    }
-
-		    /*Debug.Log("Comparison between " + prevPos[0] + " and " + edgePos[0] + " = " +
-		              Vector3.Distance(prevPos[0], edgePos[0]));
-		    if (Vector3.Distance(prevPos[0], edgePos[0]) < 0.01)
-		    {
-			    Debug.Log(edgePos[1] + " added!");
-		    }
-		    Debug.Log("Comparison between " + prevPos[0] + " and " + edgePos[1] + " = " +
-		              Vector3.Distance(prevPos[0], edgePos[1]));
-		    if (Vector3.Distance(prevPos[0], edgePos[1]) < 0.01)
-		    {
-			    Debug.Log(edgePos[1] + " added!");
-		    }*/
 		    
 		    // Only add the coordinates that haven't been previously registered
 		    if (Vector3.Distance(prevPos[0], edgePos[0]) < 0.01 || Vector3.Distance(prevPos[1], edgePos[0]) < 0.01)
@@ -438,86 +373,108 @@ public class HexMap : MonoBehaviour, IQPathWorld
     		for(int row = 0; row < numRows; row ++) {
 
     			Hex h = hexes[column, row];
-                
-                //Render elevation
                 MeshFilter mf = h.hexGO.GetComponentInChildren<MeshFilter>();
-    			if(h.ReliefName == "Mountain") {
-	    			mf.mesh = MeshMountain;
-                }
-    			else if(h.ReliefName == "Hill") {
-	    			mf.mesh = MeshHill;
-                }
-    			else if(h.ReliefName == "Plain") {
-	    			mf.mesh = MeshPlain;
-    			}
-                else if(h.ReliefName == "Water") {
-	                mf.mesh = MeshWater;
-                }
-
-                //Render material (terrain)
                 MeshRenderer mr = h.hexGO.GetComponentInChildren<MeshRenderer>();
-                if(h.BiomeName == "Tropical")
-                {
-	                mr.material = MatTropical;
-                }
-                if(h.BiomeName == "Savanna")
-                {
-	                mr.material = MatSavanna;
-                }
-    			if(h.BiomeName == "Desert")
-                {
-	                mr.material = MatDesert;
-                }
-                else if(h.BiomeName == "Steppe")
-                {
-	                mr.material = MatSteppe;
-                }
-                if(h.BiomeName == "Temperate")
-                {
-	                mr.material = MatTemperate;
-                }
-                if(h.BiomeName == "Taiga")
-                {
-	                mr.material = MatTaiga;
-                }
-                if(h.BiomeName == "Tundra")
-                {
-	                mr.material = MatTundra;
-                }
-                else if(h.BiomeName == "Lake")
-                {
-	                mr.material = MatLake;
-                }
-                else if(h.BiomeName == "Coast")
-                {
-	                mr.material = MatCoast;
-                }
-                else if(h.BiomeName == "Ocean")
-                {
-	                mr.material = MatOcean;
-                }
                 
-                //TODO: rename MeshDepth in MeshWater, rename matWater in MatCoast, add MatLake
-
-                //Render features (forests, jungle, reef...)
-                if (h.FeatureName == "Jungle")
+                //Check if the hex is visible by the current player
+                if (CurrentPeople().HasExploredHex(h))
                 {
-	                Vector3 p = h.hexGO.transform.position;
-	                if(h.ReliefName == "Hill") {
-		                p.y += 0.25f;
+	                //Render elevation
+	                if (h.ReliefName == "Mountain")
+	                {
+		                mf.mesh = MeshMountain;
 	                }
-	                GameObject.Instantiate(JunglePrefab, p, Quaternion.identity, h.hexGO.transform);
+	                else if (h.ReliefName == "Hill")
+	                {
+		                mf.mesh = MeshHill;
+	                }
+	                else if (h.ReliefName == "Plain")
+	                {
+		                mf.mesh = MeshPlain;
+	                }
+	                else if (h.ReliefName == "Water")
+	                {
+		                mf.mesh = MeshWater;
+	                }
+
+	                //Render material (terrain)
+	                if (h.BiomeName == "Tropical")
+	                {
+		                mr.material = MatTropical;
+	                }
+
+	                if (h.BiomeName == "Savanna")
+	                {
+		                mr.material = MatSavanna;
+	                }
+
+	                if (h.BiomeName == "Desert")
+	                {
+		                mr.material = MatDesert;
+	                }
+	                else if (h.BiomeName == "Steppe")
+	                {
+		                mr.material = MatSteppe;
+	                }
+
+	                if (h.BiomeName == "Temperate")
+	                {
+		                mr.material = MatTemperate;
+	                }
+
+	                if (h.BiomeName == "Taiga")
+	                {
+		                mr.material = MatTaiga;
+	                }
+
+	                if (h.BiomeName == "Tundra")
+	                {
+		                mr.material = MatTundra;
+	                }
+	                else if (h.BiomeName == "Lake")
+	                {
+		                mr.material = MatLake;
+	                }
+	                else if (h.BiomeName == "Coast")
+	                {
+		                mr.material = MatCoast;
+	                }
+	                else if (h.BiomeName == "Ocean")
+	                {
+		                mr.material = MatOcean;
+	                }
+
+	                //Render features (forests, jungle, reef...)
+	                if (h.FeatureName == "Jungle")
+	                {
+		                Vector3 p = h.hexGO.transform.position;
+		                if (h.ReliefName == "Hill")
+		                {
+			                p.y += 0.25f;
+		                }
+
+		                GameObject.Instantiate(JunglePrefab, p, Quaternion.identity, h.hexGO.transform);
+	                }
+	                else if (h.FeatureName == "Forest")
+	                {
+		                Vector3 p = h.hexGO.transform.position;
+		                if (h.ReliefName == "Hill")
+		                {
+			                p.y += 0.2f;
+		                }
+
+		                GameObject.Instantiate(ForestPrefab, p, Quaternion.identity, h.hexGO.transform);
+	                }
                 }
-                else if (h.FeatureName == "Forest")
+                else
                 {
-	                Vector3 p = h.hexGO.transform.position;
-	                if(h.ReliefName == "Hill") {
-		                p.y += 0.2f;
-	                }
-	                GameObject.Instantiate(ForestPrefab, p, Quaternion.identity, h.hexGO.transform);
+	                //The current played hasn't explored this hex
+	                mf.mesh = MeshPlain;
+	                mr.material = MatUnexplored;
+					// TODO: hide forests, rivers...
                 }
 
-	        }
+            }
     	}
     }
 

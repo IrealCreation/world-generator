@@ -10,10 +10,10 @@ public class CameraController : MonoBehaviour
 
     private bool panorama;
 
-    public float minZ = -5f;
-    public float maxZ = 39.5f;
-    public float minZoom = 30;
-    public float maxZoom = 80;
+    float minZ = -5;
+    float maxZ; //numRows * 1.25
+    public float minZoom;
+    public float maxZoom;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +39,11 @@ public class CameraController : MonoBehaviour
             MoveCamera(translate * Time.deltaTime);
         }
         CheckIfCameraMoved();
+    }
+
+    public void SetLimits(int numRows)
+    {
+        maxZ = numRows * 1.25f;
     }
 
     void CheckIfCameraMoved() {
@@ -71,32 +76,29 @@ public class CameraController : MonoBehaviour
 
     public void ZoomCamera(float scrollAmount, Vector3 hitPos)
     {
-        float minHeight = 5;
-        float maxHeight = 30;
-
         Vector3 newPosition = Camera.main.transform.position;
         
         // Move camera towards hitPos
         Vector3 dir = hitPos - newPosition;
 
         // Stop zooming out at a certain distance.
-        if (scrollAmount > 0 || newPosition.y < (maxHeight - 0.1f)) {
+        if (scrollAmount > 0 || newPosition.y < (maxZoom - 0.1f)) {
             cameraTargetOffset += dir * scrollAmount;
         }
         newPosition = Vector3.Lerp(newPosition, newPosition + cameraTargetOffset, Time.deltaTime * 5f);
         cameraTargetOffset -= newPosition - Camera.main.transform.position;
         
-        if (newPosition.y < minHeight) {
-            newPosition.y = minHeight;
+        if (newPosition.y < minZoom) {
+            newPosition.y = minZoom;
         }
-        if (newPosition.y > maxHeight) {
-            newPosition.y = maxHeight;
+        if (newPosition.y > maxZoom) {
+            newPosition.y = maxZoom;
         }
         Camera.main.transform.position = newPosition;
 
         // Change camera angle
         Camera.main.transform.rotation = Quaternion.Euler (
-            Mathf.Lerp (30, 75, newPosition.y / maxHeight),
+            Mathf.Lerp (30, 85, newPosition.y / maxZoom),
             Camera.main.transform.rotation.eulerAngles.y,
             Camera.main.transform.rotation.eulerAngles.z
         );
@@ -109,12 +111,12 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void ResetCamera()
+    public void ResetCamera(bool panorama = false)
     {
-        panorama = false;
+        startPosition.z = (minZ + maxZ) / 2f;
+        this.panorama = panorama;
         Camera.main.transform.position = startPosition;
-        
-        //TODO: reset zoom
+        // TODO: calculate the ideal initial camera position
     }
 
     public Vector3 GetPosition()

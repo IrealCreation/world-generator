@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\InputController.cs" />
      <Compile Include="Assets\Scripts\MapObject.cs" />
      <Compile Include="Assets\Scripts\MenuController.cs" />
+     <Compile Include="Assets\Scripts\People.cs" />
      <Compile Include="Assets\Scripts\Pointer.cs" />
      <Compile Include="Assets\Scripts\QPath\IQPathTile.cs" />
      <Compile Include="Assets\Scripts\QPath\IQPathUnit.cs" />
@@ -88,6 +89,7 @@
      <Compile Include="Assets\Scripts\QPath\QPathRiver.cs" />
      <Compile Include="Assets\Scripts\QPath\QPathTileGraph.cs" />
      <Compile Include="Assets\Scripts\River.cs" />
+     <Compile Include="Assets\Scripts\Structure.cs" />
      <Compile Include="Assets\Scripts\UI\BuildCityButton.cs" />
      <Compile Include="Assets\Scripts\UI\Nameplate.cs" />
      <Compile Include="Assets\Scripts\UI\NameplateController.cs" />

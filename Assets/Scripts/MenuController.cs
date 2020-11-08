@@ -23,6 +23,10 @@ public class MenuController : MonoBehaviour
         CameraController = Camera.main.GetComponent<CameraController>();
         canCloseMenu = false; // Cannot close the first starting menu
         
+        //Initial camera with the panorama
+        CameraController.SetLimits(hexMap.numRows);
+        CameraController.ResetCamera(true);
+        
         OpenMenu();
     }
 
@@ -37,6 +41,7 @@ public class MenuController : MonoBehaviour
         hexMap.ResetMap(seed);
         CurrentSeedText.text = "Current seed: " + seed;
         
+        CameraController.SetLimits(hexMap.numRows);
         CameraController.ResetCamera();
         //Debug.Log("MenuController::NewMap()");
         
