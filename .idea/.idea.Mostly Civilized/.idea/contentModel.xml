@@ -7,20 +7,35 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
-          <e p="CameraController.cs" t="Include" />
-          <e p="City.cs" t="Include" />
-          <e p="CityJob.cs" t="Include" />
-          <e p="Edge.cs" t="Include" />
-          <e p="Hex.cs" t="Include" />
-          <e p="HexBehaviour.cs" t="Include" />
-          <e p="HexMap.cs" t="Include" />
-          <e p="HexMap_Continent.cs" t="Include" />
-          <e p="HexMap_Geology.cs" t="Include" />
-          <e p="InputController.cs" t="Include" />
-          <e p="MapObject.cs" t="Include" />
-          <e p="MenuController.cs" t="Include" />
-          <e p="People.cs" t="Include" />
-          <e p="Pointer.cs" t="Include" />
+          <e p="Behaviours" t="Include">
+            <e p="NameplateBehaviour.cs" t="Include" />
+            <e p="Pointer.cs" t="Include" />
+            <e p="UnitBehaviour.cs" t="Include" />
+          </e>
+          <e p="Controllers" t="Include">
+            <e p="CameraController.cs" t="Include" />
+            <e p="InputController.cs" t="Include" />
+            <e p="NameplateController.cs" t="Include" />
+            <e p="UIController.cs" t="Include" />
+          </e>
+          <e p="Models" t="Include">
+            <e p="Biome.cs" t="Include" />
+            <e p="City.cs" t="Include" />
+            <e p="CityJob.cs" t="Include" />
+            <e p="Edge.cs" t="Include" />
+            <e p="Feature.cs" t="Include" />
+            <e p="Hex.cs" t="Include" />
+            <e p="HexBehaviour.cs" t="Include" />
+            <e p="HexMap.cs" t="Include" />
+            <e p="HexMap_Continent.cs" t="Include" />
+            <e p="HexMap_Geology.cs" t="Include" />
+            <e p="MapObject.cs" t="Include" />
+            <e p="People.cs" t="Include" />
+            <e p="Relief.cs" t="Include" />
+            <e p="River.cs" t="Include" />
+            <e p="Structure.cs" t="Include" />
+            <e p="Unit.cs" t="Include" />
+          </e>
           <e p="QPath" t="Include">
             <e p="IQPathTile.cs" t="Include" />
             <e p="IQPathUnit.cs" t="Include" />
@@ -45,16 +60,11 @@
             <e p="QPathRiver.cs" t="Include" />
             <e p="QPathTileGraph.cs" t="Include" />
           </e>
-          <e p="River.cs" t="Include" />
-          <e p="Structure.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BuildCityButton.cs" t="Include" />
-            <e p="Nameplate.cs" t="Include" />
-            <e p="NameplateController.cs" t="Include" />
             <e p="UnitSelectionPanel.cs" t="Include" />
           </e>
-          <e p="Unit.cs" t="Include" />
-          <e p="UnitView.cs" t="Include" />
+          <e p="Utils.cs" t="Include" />
         </e>
       </e>
       <e p="Mostly Civilized.sln" t="IncludeFlat" />

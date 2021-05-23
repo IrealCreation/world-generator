@@ -9,6 +9,8 @@ namespace QPath {
 
 		IQPathTile[] GetNeighbours();
 
+		float CostToEnter();
+
 		float AggregateCostToEnter( float costSoFar, IQPathTile fromTile, IQPathUnit unit );
 
 	}

@@ -8,7 +8,7 @@ public class UnitSelectionPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        inputController = GameObject.FindObjectOfType<InputController>();
     }
 
     public Text Title;
@@ -28,8 +28,8 @@ public class UnitSelectionPanel : MonoBehaviour
             Title.text = unit.Name;
             Movement.text = string.Format("{0}/{1}", unit.MovePoints, unit.Movement);
             
-            Hex[] hexPath = unit.GetHexPath();
-            Infos.text = hexPath == null ? "No move planned" : hexPath.Length.ToString();
+            //Hex[] hexPath = unit.GetHexPath();
+            //Infos.text = hexPath == null ? "No move planned" : hexPath.Length.ToString();
 
             if (unit.CanBuildCity)
             {

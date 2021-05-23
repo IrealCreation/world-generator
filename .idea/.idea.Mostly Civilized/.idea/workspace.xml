@@ -11,43 +11,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HexMap_Continent.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Pointer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/PathfindingPriorityQueue.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPathTileGraph.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/IQPathWorld.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPathRiver.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/NameplateController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/BuildCityButton.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/Nameplate.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UnitView.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/CityJob.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HexBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/City.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/MapObject.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPath_AStar.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPath.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/IQPathTile.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Unit.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/IQPathUnit.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/PathfindingPriorityQueue.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPathTileGraph.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HexMap_Geology.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/HexMap.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Hex.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Edge.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/River.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/InputController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/CameraController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/MenuController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/IQPathWorld.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/NameplateController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/BuildCityButton.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QPath/QPathRiver.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPathTileGraph.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPath_AStar.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/BuildCityButton.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/FaceCamera.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/NameplateController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Nameplate.cs" />
@@ -58,7 +39,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/HexMap_Ranges.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Unit.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPath.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/QPath/IQPathTile.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/IQPathUnit.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPathRiver.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Edge.cs" />
@@ -71,11 +51,32 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/InputController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/River.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Improvement.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Structure.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/IQPathWorld.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/People.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/HexMap_Continent.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Structure.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/HexMap.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/People.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/BuildCityButton.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/City.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/NameplateBehaviourOld.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/NameplateController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/MapObject.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/NameplateBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Biome.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Utils.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/People.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Relief.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/QPath/IQPathTile.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Edge.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Hex.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Feature.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/HexMap_Continent.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/UnitBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/HexMap.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/UIController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Models/Unit.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/InputController.cs" />
       </list>
     </option>
   </component>
