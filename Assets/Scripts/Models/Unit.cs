@@ -9,7 +9,8 @@ public class Unit : MapObject, IQPathUnit
 {
     public int Movement = 3; // Base movement of the unit
     public int MovePoints; // Movement points currently available for the turn
-    public bool CanBuildCity = false;
+    public bool CanSearch;
+    public bool CanBuildCity;
     public People People;
 
     // A delegate describes the signature of a function. It is not a function. When we set up an event listener, it expect a delegate name.
@@ -20,14 +21,17 @@ public class Unit : MapObject, IQPathUnit
 
     Queue<Hex> hexPath; // Path this unit is going to follow. First item is the hex we're standing in
     
-    public Unit(string name, Hex hex, GameObject go, People people) {
-        base.hex = hex;
+    public Unit(string name, Hex hex, GameObject go, People people, int movement, bool canSearch = false, bool canBuildCity = false) {
+        base.Hex = hex;
         GO = go;
         People = people;
         Name = name;
         MapObjectType = "Unit";
         Life = 100;
         Strength = 10;
+        Movement = movement;
+        CanSearch = canSearch;
+        CanBuildCity = canBuildCity;
         
         MovePoints = Movement;
     }
@@ -37,8 +41,8 @@ public class Unit : MapObject, IQPathUnit
     /// </summary>
     /// <param name="hex">The hex to move to</param>
     public void SetHex(Hex hex) { 
-		if(base.hex != null) {
-    		base.hex.RemoveUnit(this);
+		if(base.Hex != null) {
+    		base.Hex.RemoveUnit(this);
     	}
 
     	hex.AddUnit(this);
@@ -46,11 +50,13 @@ public class Unit : MapObject, IQPathUnit
         if (People != null)
         {
             People.Explore(hex, 2);
+            if(CanSearch)
+                hex.HexMap.HighlightSearchableHexes(People);
         }
 
         OnMove(hex);
 
-    	base.hex = hex;
+    	base.Hex = hex;
     }
 
     public void SetHexPath( Hex[] hexPath ) {
@@ -103,7 +109,7 @@ public class Unit : MapObject, IQPathUnit
         if (MovePoints > 0)
         {
             // The path of the unit starts at the current hex
-            SetHex(hex);
+            SetHex(Hex);
 
             //StartCoroutine(UnitMoveCoroutine());
             while (DoMove())
@@ -163,8 +169,8 @@ public class Unit : MapObject, IQPathUnit
     {
         //returns turnsToDate + turns for this move
 
-        float baseTurnsToEnterTile = CostToEnterTile(sourceTile, destinationTile) / Movement;
-        float turnsRemaining = MovePoints / Movement;
+        float baseTurnsToEnterTile = (float)CostToEnterTile(sourceTile, destinationTile) / Movement;
+        //Debug.Log("baseTurnsToEnterTile " + destinationTile + " = " + baseTurnsToEnterTile);
 
         float turnsToDateWhole = Mathf.Floor(turnsToDate);
         float turnsToDateFraction = turnsToDate - turnsToDateWhole;

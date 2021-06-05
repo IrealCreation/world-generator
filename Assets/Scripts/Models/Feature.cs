@@ -8,17 +8,15 @@ using UnityEngine;
 public class Feature
 {
     public string Name;
-    public Dictionary<string, float> Resources;
     public GameObject Prefab;
     public int MovementCost; // Additional movement cost for units moving here
     public List<Biome> AllowedBiomes; // The biomes in which this feature can spawn
 
-    public delegate int HexProbabilityDelegate(Hex h);
+    public delegate int HexProbabilityDelegate(Hex h); //TODO: implement that
 
-    public Feature(string name, Dictionary<string, float> resources, GameObject prefab, int movementCost = 0)
+    public Feature(string name, GameObject prefab, int movementCost = 0)
     {
         Name = name;
-        Resources = resources;
         Prefab = prefab;
         MovementCost = movementCost;
     }

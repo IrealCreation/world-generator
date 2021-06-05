@@ -20,7 +20,8 @@ public class People
     public int Expansionism; 
     public int Bellicosity;
 
-    private HashSet<Hex> exploredHexes;
+    public HashSet<Hex> ExploredHexes { get; protected set; }
+    public HashSet<Hex> SearchedHexes { get; protected set; } // Hexes already searched by a scout, giving resources
     public HashSet<Hex> Territory { get; private set; }
     public List<City> Cities; // Not sure we keep the cities, but I put it there in the meantime
     public List<Unit> Units;
@@ -34,9 +35,10 @@ public class People
         Cities = new List<City>();
         Color = Color.red;
 
-        exploredHexes = new HashSet<Hex>();
+        SearchedHexes = new HashSet<Hex>();
+        ExploredHexes = new HashSet<Hex>();
         if(startingHex == null)
-            exploredHexes = new HashSet<Hex>(HexMap.GetAllHexes());
+            ExploredHexes = new HashSet<Hex>(HexMap.GetAllHexes());
         else
         {
             Explore(startingHex, 3);
@@ -72,16 +74,28 @@ public class People
 
     public bool HasExploredHex(Hex h)
     {
-        return exploredHexes.Contains(h);
+        return ExploredHexes.Contains(h);
+    }
+
+    public bool HasSearchedHex(Hex h)
+    {
+        return SearchedHexes.Contains(h);
     }
 
     public void Explore(Hex h, int range = 0)
     {
         if (range > 0)
-            exploredHexes.UnionWith(HexMap.GetHexesWithinRangeOf(h, range));
+            ExploredHexes.UnionWith(HexMap.GetHexesWithinRangeOf(h, range));
         else
-            exploredHexes.Add(h);
+            ExploredHexes.Add(h);
         HexMap.UpdateHexesVisuals();
+    }
+
+    public void SearchHex(Hex h)
+    {
+        SearchedHexes.Add(h);
+        HexMap.UpdateHexVisuals(h);
+        // TODO: give resources and event
     }
 
     public void TerritoryAdd(Hex h)

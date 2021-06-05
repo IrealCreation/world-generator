@@ -120,6 +120,9 @@ public class HexMap_Continent : HexMap
     	// Pick biome depending of temperature and moisture
         IdentifyBiomes();
         
+        // Add resources depending on biomes and other characteristics
+        IdentifyResources();
+        
         // Add features depending on biomes and other characteristics
         IdentifyFeatures();
         
@@ -463,18 +466,22 @@ public class HexMap_Continent : HexMap
     {
 	    foreach (Hex h in hexes)
 	    {
+		    // Features can only spawn if there aren't resources
+		    if(h.Resource != null)
+			    continue;
+		    
 		    //Indentify features (forests, jungle, reef...)
 		    if ((h.Relief.Name == "Plain" || h.Relief.Name == "Hill") &&
 		        (h.Biome.Name != "Desert" && h.Biome.Name != "Tundra"))
 		    {
 
-			    float forestScore = h.Moisture;
+			    int forestChance = (int) (h.Moisture * 30f);
+			    if (h.HasRiver())
+				    forestChance += 20;
 
 			    if (h.Biome.Name == "Tropical" || h.Biome.Name == "Savanna")
 			    {
-				    //Can spawn jungle
-				    int jungleChance = (int) Mathf.Lerp(0, 50, forestScore);
-				    if (Random.Range(0, 100) < jungleChance)
+				    if (Random.Range(0, 100) < forestChance)
 				    {
 					    h.Feature = features["Jungle"];
 				    }
@@ -482,8 +489,6 @@ public class HexMap_Continent : HexMap
 			    }
 			    else
 			    {
-				    //Can spawn forest
-				    int forestChance = (int) Mathf.Lerp(0, 50, forestScore);
 				    if (Random.Range(0, 100) < forestChance)
 				    {
 					    h.Feature = features["Forest"];
@@ -497,11 +502,47 @@ public class HexMap_Continent : HexMap
 			    {
 				    h.Feature = features["Reef"];
 			    }
+		    }
+	    }
+    }
 
-			    int coralChance = (int) (h.Temperature * 8f - 2);
-			    if (Random.Range(0, 100) < coralChance)
+    void IdentifyResources()
+    {
+	    /*
+	     * Other way we could do this: give to each tile its spawn score for each resource, then spawn X resources of each type
+	     * on times that have the highest score (and add a negative effect to the spawn score of this resource on close tiles
+	     * if we want to avoid clusters)
+	     */
+	    foreach (Hex h in hexes)
+	    {
+		    // Convert each entry of resources as a probability
+		    List<KeyValuePair<Resource, int>> resourceChances = new List<KeyValuePair<Resource, int>>();
+		    foreach (KeyValuePair<string, Resource> kv in resources)
+		    {
+			    // Is the local biome / relief allowed for this resource?
+			    if (kv.Value.AllowedBiomes.Contains(h.Biome) && kv.Value.AllowedReliefs.Contains(h.Relief))
 			    {
-				    //TODO: h.Feature = features["Coral"];
+				    int chance = kv.Value.HexProbability(h);
+				    if(chance > 0)
+					    resourceChances.Add(new KeyValuePair<Resource, int>(kv.Value, chance));
+			    }
+		    }
+		    
+		    // If no resource can spawn here, let's move to next tile
+		    if(resourceChances.Count < 1)
+			    continue;
+		    
+		    // Sort the resource list based on their respective probability
+		    resourceChances.Sort((x,y)=>x.Value.CompareTo(y.Value));
+		    
+		    // Go through the resource list until one is picked
+		    foreach (KeyValuePair<Resource, int> kv in resourceChances)
+		    {
+			    if (Random.Range(0, 100) < kv.Value)
+			    {
+				    h.Resource = kv.Key;
+				    Debug.Log("Resource of hex " + h + " : " + h.Resource.Name);
+				    break;
 			    }
 		    }
 	    }
@@ -718,50 +759,6 @@ public class HexMap_Continent : HexMap
 				    }
 			    }
 		    }
-	    }
-    }
-
-    void LogStats()
-    {
-	    int tileCount = 0;
-	    int landTiles = 0;
-	    int waterTiles = 0;
-	    float totalMoisture = 0f;
-	    Dictionary<string, int> biomes = new Dictionary<string, int>();
-	    Dictionary<string, int> reliefs = new Dictionary<string, int>();
-	    
-	    foreach (Hex h in hexes)
-	    {
-		    tileCount++;
-		    
-		    if(!biomes.ContainsKey(h.Biome.Name))
-			    biomes.Add(h.Biome.Name, 0);
-		    biomes[h.Biome.Name]++;
-		    
-		    if(!reliefs.ContainsKey(h.Relief.Name))
-			    reliefs.Add(h.Relief.Name, 0);
-		    reliefs[h.Relief.Name]++;
-		    
-		    if (h.Elevation > 0)
-		    {
-			    totalMoisture += h.Moisture;
-			    landTiles++;
-		    }
-		    else
-		    {
-			    waterTiles++;
-		    }
-	    }
-
-	    Debug.Log("--- Map Stats ---");
-	    Debug.Log("Average Moisture: " + totalMoisture / landTiles);
-	    foreach (KeyValuePair<string, int> entry in biomes)
-	    {
-		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
-	    }
-	    foreach (KeyValuePair<string, int> entry in reliefs)
-	    {
-		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
 	    }
     }
 }

@@ -15,11 +15,11 @@ namespace QPath {
 	public static class QPath {
 
 		// <T> is used to define a generic type that must be specified when calling the function, and we want it to implement IQPathTile
-		public static T[] FindPath<T>( IQPathWorld world, IQPathUnit unit, T startTile, T endTile, CostEstimateDelegate costEstimateFunc )
+		public static T[] FindPath<T>( IQPathUnit unit, T startTile, T endTile, CostEstimateDelegate costEstimateFunc )
 			where T : IQPathTile 
 		{
 
-			if(world == null || unit == null || startTile == null || endTile == null) {
+			if(unit == null || startTile == null || endTile == null) {
 
 				Debug.LogError("null values passed to QPath::FindPath");
 				return null;
@@ -27,7 +27,7 @@ namespace QPath {
 			}
 
 			// Call on our path solver
-			QPath_AStar<T> resolver = new QPath_AStar<T>( world, unit, startTile, endTile, costEstimateFunc );
+			QPath_AStar<T> resolver = new QPath_AStar<T>( unit, startTile, endTile, costEstimateFunc );
 			
 			resolver.DoWork();
 

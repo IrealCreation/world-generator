@@ -63,7 +63,6 @@ public class PathfindingPriorityQueue<T>
 
     /// <summary>
     /// Enqueue the specified data and priority.
-    /// If the data already exists in the queue, it updates the priority instead.
     /// Should take O(log n) -- O(1) amortized for the resizing, and O(log n) for the insertion.
     /// </summary>
     /// <param name="data">The data to be enqueued.</param>

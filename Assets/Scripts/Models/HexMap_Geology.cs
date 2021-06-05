@@ -148,7 +148,7 @@ public class HexMap_Geology : HexMap
 
 	    Debug.Log("Mountain range of " + range + " from " + originHex + " to " + destinationHex);
 	    
-	    Hex[] hexPath = QPath.QPath.FindPath<Hex>(this, pathfinder, originHex, destinationHex, Hex.CostEstimate);
+	    Hex[] hexPath = QPath.QPath.FindPath<Hex>(pathfinder, originHex, destinationHex, Hex.CostEstimate);
 	    foreach (Hex hex in hexPath)
 	    {
 		    hex.Elevation = Random.Range(190, 200) / 100f;

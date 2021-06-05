@@ -6,7 +6,7 @@ using System;
 public class MapObject
 {
     public GameObject GO;
-    protected Hex hex;
+    public Hex Hex { get; protected set; }
     
     public string Name;
     public string MapObjectType;
@@ -14,8 +14,4 @@ public class MapObject
     
     public int Life;
     public int Strength;
-
-    public Hex GetHex() {
-        return hex;
-    }
 }

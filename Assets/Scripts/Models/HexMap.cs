@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,15 +12,24 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	public int numRows = 40;
 
     public GameObject HexPrefab;
-    public GameObject ForestPrefab;
-    public GameObject JunglePrefab;
-    public GameObject ReefPrefab;
     public GameObject PawnPrefab;
     public GameObject ScoutPrefab;
     public GameObject CityPrefab;
     public GameObject RiverBranchPrefab;
     public GameObject TerritoryBorderPrefab;
     public GameObject FogPrefab;
+    public GameObject HighlightPrefab;
+    // Features
+    public GameObject ForestPrefab;
+    public GameObject JunglePrefab;
+    public GameObject ReefPrefab;
+    // Resources
+    public GameObject FishPrefab;
+    public GameObject FruitsPrefab;
+    public GameObject GeyserPrefab;
+    public GameObject HuntPrefab;
+    public GameObject OasisPrefab;
+    public GameObject SalarPrefab;
 
     public Mesh MeshWater;
     public Mesh MeshPlain;
@@ -47,6 +57,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     protected Dictionary<string, Biome> biomes;
     protected Dictionary<string, Feature> features;
     protected Dictionary<string, Relief> reliefs;
+    protected Dictionary<string, Resource> resources;
     
     protected List<River> rivers;
     private List<Unit> units; // TODO: put it in People
@@ -61,42 +72,47 @@ public class HexMap : MonoBehaviour, IQPathWorld
     public delegate void OnCityCreatedDelegate( City city );
     public event OnCityCreatedDelegate OnCityCreated;
 
-    public InputController inputController;
+    private InputController inputController;
+    private MapUIController mapUIController;
 
     // Start is called before the first frame update
     void Start()
     {
+	    // Get Controllers
+	    inputController = GameObject.FindObjectOfType<InputController>();
+	    mapUIController = GameObject.FindObjectOfType<MapUIController>();
+	    
 	    // Instantiate the terrain biomes
 	    biomes = new Dictionary<string, Biome>();
 	    biomes.Add("Coast", new Biome("Coast", 
-		    new Dictionary<string, float>(){ {"food", 3}, {"wealth", 1} }, 
+		    new Yields(3, 1), 
 		    MatCoast));
 	    biomes.Add("Lake", new Biome("Lake", 
-		    new Dictionary<string, float>(){ {"food", 3}, {"wealth", 1} }, 
+		    new Yields(3, 1), 
 		    MatLake));
 	    biomes.Add("Ocean", new Biome("Ocean", 
-		    new Dictionary<string, float>(), 
+		    new Yields(), 
 		    MatOcean));
 	    biomes.Add("Tropical", new Biome("Tropical", 
-		    new Dictionary<string, float>(){ {"food", 2}, {"wealth", 1}, {"culture", 1} }, 
+		    new Yields(2, 1, 0, 1), 
 		    MatTropical));
 	    biomes.Add("Savanna", new Biome("Savanna", 
-		    new Dictionary<string, float>(){ {"food", 2}, {"military", 1}, {"wealth", 1} }, 
+		    new Yields(2, 1, 1), 
 		    MatSavanna));
 	    biomes.Add("Desert", new Biome("Desert", 
-		    new Dictionary<string, float>(){ {"food", 1}, {"military", 1}, {"wealth", 2} }, 
+		    new Yields(1, 2, 1), 
 		    MatDesert));
 	    biomes.Add("Steppe", new Biome("Steppe", 
-		    new Dictionary<string, float>(){ {"food", 1}, {"military", 2}, {"culture", 1} }, 
+		    new Yields(1, 0, 2, 0, 1), 
 		    MatSteppe));
 	    biomes.Add("Temperate", new Biome("Temperate", 
-		    new Dictionary<string, float>(){ {"food", 2}, {"wealth", 2} }, 
+		    new Yields(2, 2), 
 		    MatTemperate));
 	    biomes.Add("Taiga", new Biome("Taiga", 
-		    new Dictionary<string, float>(){ {"food", 2}, {"military", 1}, {"culture", 1} }, 
+		    new Yields(2, 0, 1, 0, 1), 
 		    MatTaiga));
 	    biomes.Add("Tundra", new Biome("Tundra", 
-		    new Dictionary<string, float>(){ {"food", 1}, {"military", 1}, {"science", 2} }, 
+		    new Yields(1, 0, 2, 1), 
 		    MatTundra));
 	    
 	    // Instantiate the terrain reliefs
@@ -109,17 +125,56 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    // Instantiate the terrain features
 	    features = new Dictionary<string, Feature>();
 	    features.Add("Forest", new Feature("Forest",
-		    new Dictionary<string, float>(){ {"food", 1}, {"wealth", 1} },
 		    ForestPrefab, 1));
 	    features.Add("Jungle", new Feature("Jungle",
-		    new Dictionary<string, float>(){ {"food", 1}, {"science", 1} },
 		    JunglePrefab, 1));
 	    features.Add("Reef", new Feature("Reef",
-		    new Dictionary<string, float>(){ {"military", 2} },
 		    ReefPrefab, 1));
-	    features.Add("Coral", new Feature("Coral",
+	    
+	    // Instantiate the terrain resources
+	    resources = new Dictionary<string, Resource>();
+	    /*resources.Add("Coral", new Resource("Coral",
 		    new Dictionary<string, float>(){ {"science", 1}, {"culture", 1} },
-		    ReefPrefab, 1));
+		    new List<Biome>() { biomes["Coast"] }, 
+		    new List<Relief>() { reliefs["Water"] }, 
+		    hex => (int) (hex.Temperature * 8f - 2),
+		    ReefPrefab, 1));*/
+	    resources.Add("Fish", new Resource("Fish",
+		    new Yields(1, 1), 
+		    new List<Biome>() { biomes["Coast"], biomes["Lake"] }, 
+		    new List<Relief>() { reliefs["Water"] }, 
+		    hex => (int) ((0.5f - Mathf.Abs(hex.Temperature - 0.5f)) * 4f + 5f),
+		    FishPrefab));
+	    resources.Add("Fruits", new Resource("Fruits",
+		    new Yields(1, 0, 0, 0, 1), 
+		    new List<Biome>() { biomes["Temperate"], biomes["Savanna"], biomes["Tropical"] }, 
+		    new List<Relief>() { reliefs["Plain"] }, 
+		    hex => (int) (hex.Moisture * 2f + 4),
+		    FruitsPrefab, 1));
+	    resources.Add("Geyser", new Resource("Geyser",
+		    new Yields(0, 0, 0, 1, 1), 
+		    new List<Biome>() { biomes["Tundra"], biomes["Taiga"], biomes["Steppe"] }, 
+		    new List<Relief>() { reliefs["Plain"], reliefs["Hill"] }, 
+		    hex => (int) (hex.Moisture * 3f + 2),
+		    GeyserPrefab));
+	    resources.Add("Hunt", new Resource("Hunt",
+		    new Yields(1, 0, 1), 
+		    new List<Biome>() { biomes["Temperate"], biomes["Taiga"], biomes["Steppe"], biomes["Savanna"], biomes["Tropical"] }, 
+		    new List<Relief>() { reliefs["Plain"], reliefs["Hill"] }, 
+		    hex => 4,
+		    HuntPrefab));
+	    resources.Add("Oasis", new Resource("Oasis",
+		    new Yields(1, 1), 
+		    new List<Biome>() { biomes["Desert"] },
+		    new List<Relief>() { reliefs["Plain"] }, 
+		    hex => (int) (hex.Moisture * 4f + 4f),
+		    OasisPrefab));
+	    resources.Add("Salar", new Resource("Salar",
+		    new Yields(0, 1, 0, 1),
+		    new List<Biome>() { biomes["Desert"], biomes["Steppe"] }, 
+		    new List<Relief>() { reliefs["Plain"] }, 
+		    hex => (int) ((1f - hex.Moisture) * 5f + 1),
+		    SalarPrefab));
 	    
 	    StartGame();
 	    
@@ -146,6 +201,9 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    peoples = new List<People>();
 	    territoryBorders = new Dictionary<People, List<GameObject>>();
 	    
+	    // Resets the state of the MapUIController
+	    mapUIController.Restart();
+	    
 	    // Generate the map
 	    if(seed != 0)
 			GenerateMap(seed);
@@ -161,8 +219,6 @@ public class HexMap : MonoBehaviour, IQPathWorld
     }
 
     public void NextTurn() {
-	    
-	    //TODO: render map depending on CurrentPeople (see UpdateHexVisuals)
 	    
 	    inputController.SelectedUnit = null;
 	    inputController.SelectedCity = null;
@@ -214,7 +270,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     				this.transform
     			);
 
-    			h.hexGO = hexGO;
+    			h.GO = hexGO;
     			h.HexMap = this;
 
                 hexToGameObjectMap[h] = hexGO;
@@ -433,8 +489,8 @@ public class HexMap : MonoBehaviour, IQPathWorld
 
     public void RenderRiver(Vector3[] positions, River river)
     {
-	    GameObject go = (GameObject) Instantiate(RiverBranchPrefab, river.Source.HexA.hexGO.transform.position, Quaternion.identity,
-		    river.Source.HexA.hexGO.transform);
+	    GameObject go = (GameObject) Instantiate(RiverBranchPrefab, river.Source.HexA.GO.transform.position, Quaternion.identity,
+		    river.Source.HexA.GO.transform);
 	    LineRenderer lineRenderer = go.GetComponentInChildren<LineRenderer>();
 	    
 	    lineRenderer.positionCount = positions.Length;
@@ -455,11 +511,11 @@ public class HexMap : MonoBehaviour, IQPathWorld
 
     public void UpdateHexVisuals(Hex h)
     {
-	    GameObject surface = h.hexGO.transform.Find("Surface").gameObject;
+	    GameObject surface = h.GO.transform.Find("Surface").gameObject;
 	    MeshFilter surfaceMeshFilter = surface.GetComponentInChildren<MeshFilter>();
         MeshRenderer surfaceMeshRenderer = surface.GetComponentInChildren<MeshRenderer>();
         
-        GameObject underground = h.hexGO.transform.Find("Underground").gameObject;
+        GameObject underground = h.GO.transform.Find("Underground").gameObject;
         MeshFilter undergroundMeshFilter = underground.GetComponentInChildren<MeshFilter>();
         
         if (peoples.Count == 0 || CurrentPeople().HasExploredHex(h))
@@ -476,20 +532,32 @@ public class HexMap : MonoBehaviour, IQPathWorld
             //Render material (biome)
             surfaceMeshRenderer.material = h.Biome.Material;
 
-            //Render features (forests, jungle, reef...)
+            //Render feature
             if (h.Feature != null)
             {
-                Vector3 p = h.hexGO.transform.position;
+                Vector3 p = h.GO.transform.position;
                 p.y += h.Relief.ObjectY;
 
-                GameObject go = GameObject.Instantiate(h.Feature.Prefab, p, Quaternion.identity, h.hexGO.transform);
+                GameObject go = GameObject.Instantiate(h.Feature.Prefab, p, Quaternion.identity, h.GO.transform);
                 go.name = "Feature";
+            }
+
+            //Render resource
+            if (h.Resource != null)
+            {
+	            Vector3 p = h.GO.transform.position;
+	            p.y += h.Relief.ObjectY;
+
+	            Quaternion r = Quaternion.Euler(0, h.ResourceRotation, 0);
+
+	            GameObject go = GameObject.Instantiate(h.Resource.Prefab, p, r, h.GO.transform);
+	            go.name = "Resource";
             }
             
             // Remove the fog and make the underground visible
             if (h.IsVisible == false)
             {
-	            GameObject fog = h.hexGO.transform.Find("Fog").gameObject;
+	            GameObject fog = h.GO.transform.Find("Fog").gameObject;
 	            Destroy(fog);
 	            underground.SetActive(true);
             }
@@ -511,17 +579,52 @@ public class HexMap : MonoBehaviour, IQPathWorld
             underground.SetActive(false);
             
             // Destroy the feature
-            Transform feature = h.hexGO.transform.Find("Feature");
+            Transform feature = h.GO.transform.Find("Feature");
             if(feature != null)
 	            Destroy(feature.gameObject);
             
+            // Destroy the resource
+            Transform resource = h.GO.transform.Find("Resource");
+            if(resource != null)
+	            Destroy(resource.gameObject);
+            
             // Spawn the fog
-            GameObject go = GameObject.Instantiate(FogPrefab, h.hexGO.transform.position, Quaternion.identity, h.hexGO.transform);
+            GameObject go = GameObject.Instantiate(FogPrefab, h.GO.transform.position, Quaternion.identity, h.GO.transform);
             go.name = "Fog";
             
             // Remember the visibility
             h.IsVisible = false;
         }
+        
+        // Update the Yields UI
+        mapUIController.ShowYields(h);
+    }
+
+    public void HighlightSearchableHexes(People people)
+    {
+	    foreach (Hex hex in people.ExploredHexes)
+	    {
+		    if (hex.CanBeSearched(people))
+		    {
+			    hexToGameObjectMap[hex].transform.Find("Highlight").gameObject.SetActive(true);
+		    }
+		    else
+		    {
+			    hexToGameObjectMap[hex].transform.Find("Highlight").gameObject.SetActive(false);
+		    }
+	    }
+    }
+    public void UnhighlightSearchableHexes()
+    {
+	    foreach (KeyValuePair<Hex, GameObject> kv in hexToGameObjectMap)
+	    {
+		    kv.Value.transform.Find("Highlight").gameObject.SetActive(false);
+	    }
+    }
+
+    public void SearchHex()
+    {
+	    CurrentPeople().SearchHex(inputController.SelectedUnit.Hex);
     }
 
     public Hex[] GetHexesWithinRangeOf(Hex centerHex, int range) {
@@ -568,9 +671,9 @@ public class HexMap : MonoBehaviour, IQPathWorld
             this.units = new List<Unit>();
         }
 
-        GameObject go = Instantiate( prefab, hex.hexGO.transform.position, Quaternion.identity, hex.hexGO.transform );
+        GameObject go = Instantiate( prefab, hex.GO.transform.position, Quaternion.identity, hex.GO.transform );
 
-        Unit unit = new Unit(type, hex, go, CurrentPeople());
+        Unit unit = new Unit(type, hex, go, CurrentPeople(), 3, true, false);
 
         units.Add(unit);
         hex.AddUnit(unit);
@@ -590,8 +693,8 @@ public class HexMap : MonoBehaviour, IQPathWorld
 		    return false;
 	    }
 	    
-	    GameObject go = Instantiate(prefab, hex.hexGO.transform.position, Quaternion.identity,
-		    hex.hexGO.transform);
+	    GameObject go = Instantiate(prefab, hex.GO.transform.position, Quaternion.identity,
+		    hex.GO.transform);
 
 	    City city = new City(hex, people, go);
 
@@ -659,8 +762,8 @@ public class HexMap : MonoBehaviour, IQPathWorld
 			    if (!people.Territory.Contains(edge.HexA) || !people.Territory.Contains(edge.HexB))
 			    {
 				    //Debug.Log("Border between " + edge.HexA + " and " + edge.HexB);
-				    GameObject go = Instantiate(TerritoryBorderPrefab, hex.hexGO.transform.position,
-					    Quaternion.identity, hex.hexGO.transform);
+				    GameObject go = Instantiate(TerritoryBorderPrefab, hex.GO.transform.position,
+					    Quaternion.identity, hex.GO.transform);
 				    go.name = "Border of " + people + " " + edge.HexA + " - " + edge.HexB;
 				    territoryBorders[people].Add(go);
 				    go.transform.rotation = edge.Angle(hex);
@@ -688,5 +791,61 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    }
 
 	    return null;
+    }
+
+    protected void LogStats()
+    {
+	    int tileCount = 0;
+	    int landTiles = 0;
+	    int waterTiles = 0;
+	    float totalMoisture = 0f;
+	    Dictionary<string, int> biomesCount = new Dictionary<string, int>();
+	    Dictionary<string, int> reliefsCount = new Dictionary<string, int>();
+	    Dictionary<string, int> resourcesCount = new Dictionary<string, int>();
+	    
+	    foreach (Hex h in hexes)
+	    {
+		    tileCount++;
+		    
+		    if(!biomesCount.ContainsKey(h.Biome.Name))
+			    biomesCount.Add(h.Biome.Name, 0);
+		    biomesCount[h.Biome.Name]++;
+		    
+		    if(!reliefsCount.ContainsKey(h.Relief.Name))
+			    reliefsCount.Add(h.Relief.Name, 0);
+		    reliefsCount[h.Relief.Name]++;
+
+		    if (h.Resource != null)
+		    {
+			    if (!resourcesCount.ContainsKey(h.Resource.Name))
+				    resourcesCount.Add(h.Resource.Name, 0);
+			    resourcesCount[h.Resource.Name]++;
+		    }
+
+		    if (h.Elevation > 0)
+		    {
+			    totalMoisture += h.Moisture;
+			    landTiles++;
+		    }
+		    else
+		    {
+			    waterTiles++;
+		    }
+	    }
+
+	    Debug.Log("--- Map Stats ---");
+	    Debug.Log("Average Moisture: " + totalMoisture / landTiles);
+	    foreach (KeyValuePair<string, int> entry in biomesCount)
+	    {
+		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
+	    }
+	    foreach (KeyValuePair<string, int> entry in reliefsCount)
+	    {
+		    Debug.Log(entry.Key + ": " + Math.Round((float)entry.Value / tileCount * 100f, 1) + "% (" + Math.Round((float)entry.Value / landTiles * 100f, 1) + "% of land)");
+	    }
+	    foreach (KeyValuePair<string, int> entry in resourcesCount)
+	    {
+		    Debug.Log(entry.Key + ": " + entry.Value);
+	    }
     }
 }

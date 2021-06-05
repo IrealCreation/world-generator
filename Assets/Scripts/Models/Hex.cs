@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using QPath;
+using Random = UnityEngine.Random;
 
 /*
 	Defines grid position, world space position, size, neighbours... of a Hex Tile.
@@ -22,17 +23,19 @@ public class Hex : IQPathTile {
 	public float Rain = 0; // Used to calculate Moisture, as the average of neighbours' rain
 	public float Moisture = 0;
 	public float Temperature = 0;
+	public int ResourceRotation = 0; // Random rotation of resources on this tile
 
 	public Relief Relief;
 	public Biome Biome; // Coast, Ocean, Tropical, Savanna, Desert, Steppe, Temperate, Taiga, Tundra
 	public Feature Feature;
+	public Resource Resource;
 	public string GeologyName; // Peak, Rift, Volcano (in HexMap_Geology)
 	public bool IsSea = false; // Distinguish seas from lakes on water tiles
 
 	public bool? IsVisible = null; // Remember if this hex is visible or not (so we know if we have to visually update it)
 	// (We use a nullable bool so "null" means it was never updated)
 
-	public GameObject hexGO;
+	public GameObject GO;
 
 	public HexMap HexMap;
 
@@ -51,6 +54,8 @@ public class Hex : IQPathTile {
 		this.Q = q;
 		this.R = r;
 		this.S = -(q + r);
+
+		this.ResourceRotation = Random.Range(0, 360);
 	}
 
 	public override string ToString()
@@ -219,35 +224,68 @@ public class Hex : IQPathTile {
 
 	public bool CanBuildCity()
 	{
-		if (city != null)
+		if (city != null && Relief.Name != "Water")
 			return false;
 		return true;
 	}
 
-	public Dictionary<string, float> GetResourceGain()
+	public bool CanBeSearched(People people)
 	{
-		Dictionary<string, float> resources = Biome.Resources;
-		if (Relief.Name == "Flat" || Relief.Name == "Water")
-			resources["food"] += 1;
-		else if (Relief.Name == "Hill")
+		if(people.HasSearchedHex(this))
+			return false;
+		return (Resource != null);
+	}
+
+	public bool HasRiver()
+	{
+		foreach (Edge e in GetEdges())
 		{
-			if (resources["military"] > 0)
-				resources["military"] += 1;
+			if (e.River != null)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Yields GetYields()
+	{
+		Yields yields = new Yields(Biome.Yields);
+		if (Relief.Name == "Hill")
+		{
+			yields.Food -= 1;
+			if (yields.Military > 0)
+				yields.Military += 1;
 			else
-				resources["wealth"] += 1;
+				yields.Wealth += 1;
 		}
 		else if (Relief.Name == "Mountain")
 		{
-			if (resources["wealth"] > 0)
-				resources["wealth"] += 1;
-			else if(resources["culture"] > 0)
-				resources["culture"] += 1;
-			else if(resources["science"] > 0)
-				resources["science"] += 1;
+			yields.Food -= 1;
+			if (yields.Wealth > 0)
+				yields.Wealth += 1;
+			else if(yields.Culture > 0)
+				yields.Culture += 1;
+			else if(yields.Science > 0)
+				yields.Science += 1;
 		}
 
-		resources = Utils.SumValueDictionaries(resources, Feature.Resources);
-		return resources;
+		if (Feature != null && (Feature.Name == "Forest" || Feature.Name == "Jungle"))
+		{
+			if (yields.Wealth > 0)
+				yields.Wealth += 1;
+			else
+				yields.Military += 1;
+		}
+		else if (Feature != null && Feature.Name == "Reef")
+		{
+			yields.Military += 1;
+		}
+
+		if(Resource != null)
+			yields += Resource.Yields;
+		
+		return yields;
 	}
 
 	public string Description()
@@ -260,15 +298,13 @@ public class Hex : IQPathTile {
 
 		if (Feature != null)
 			description += ", " + Feature.Name;
-
-		foreach (Edge e in GetEdges())
+		if (Resource != null)
+			description += ", " + Resource.Name;
+		
+		if (HasRiver())
 		{
-			if (e.River != null)
-			{
-				log += ", River";
-				description += ", River";
-				break;
-			}
+			log += ", River";
+			description += ", River";
 		}
 		
 		description += ".\nElevation: " + (int) (Elevation * 4000) + "m" +
@@ -285,13 +321,15 @@ public class Hex : IQPathTile {
 		float result = 1 + Relief.MovementCost;
 		if (Feature != null)
 			result += Feature.MovementCost;
+		if (Resource != null)
+			result += Resource.MovementCost;
 		return result;
 	}
 
 	public static float CostEstimate(IQPathTile a, IQPathTile b)
 	{
 		// We multiply the estimate by 0.5 as it results in a slower search, but a better path (I guess?)
-		return 0.5f * Distance((Hex) a, (Hex) b) + ((Hex) b).CostToEnter();
+		return 0.5f * Distance((Hex) a, (Hex) b);
 	}
 
 	public IQPathTile[] GetNeighbours()

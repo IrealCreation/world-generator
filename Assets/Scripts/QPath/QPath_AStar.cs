@@ -9,15 +9,13 @@ namespace QPath {
 		// The thing that actually does pathfinding stuff
 
 		Queue<T> path;
-		IQPathWorld world;
 		IQPathUnit unit;
 		T startTile;
 		T endTile;
 		private CostEstimateDelegate costEstimateFunc;
 
-		public QPath_AStar( IQPathWorld world, IQPathUnit unit, T startTile, T endTile, CostEstimateDelegate costEstimateFunc ) {
+		public QPath_AStar( IQPathUnit unit, T startTile, T endTile, CostEstimateDelegate costEstimateFunc ) {
 			// Do setup
-			this.world = world;
 			this.unit = unit;
 			this.startTile = startTile;
 			this.endTile = endTile;
@@ -28,7 +26,6 @@ namespace QPath {
 
 			path = new Queue<T>();
 
-			//A HashSet is like an array but with unique (values?)
 			HashSet<T> closedSet = new HashSet<T>();
 
 			//A PriorityQueue is a type of array where each value has a priority value. Use Enqueue(value, priority) and Dequeue()
@@ -37,11 +34,11 @@ namespace QPath {
 
 			Dictionary<T, T> came_From = new Dictionary<T, T>();
 
-			//The cost to walk from point A to point B
+			//The cost to walk from startTile A to tile B
             Dictionary<T, float> g_score = new Dictionary<T, float>();
             g_score[startTile] = 0;
 
-            //The estimated cost to walk from point A to point B
+            //The estimated cost to walk from tile A to endTile B
             Dictionary<T, float> f_score = new Dictionary<T, float>();
             f_score[startTile] = costEstimateFunc(startTile, endTile);
             
@@ -58,11 +55,9 @@ namespace QPath {
 
                 closedSet.Add(current);
 
-                foreach (T edge_neighbour in current.GetNeighbours())
+                foreach (T neighbour in current.GetNeighbours())
                 {
-	                T neighbour = edge_neighbour;
-
-                    if (closedSet.Contains(neighbour))
+	                if (closedSet.Contains(neighbour))
                     {
                         continue; // ignore this already completed neighbor
                     }
@@ -90,6 +85,7 @@ namespace QPath {
                     came_From[neighbour] = current;
                     g_score[neighbour] = tentative_g_score;
                     f_score[neighbour] = g_score[neighbour] + costEstimateFunc(neighbour, this.endTile);
+                    //Debug.Log("EnqueuOrUpdate " + neighbour + " g_score: " + g_score[neighbour] + " f_score: " + f_score[neighbour]);
 
                     openSet.EnqueueOrUpdate(neighbour, f_score[neighbour]);
                 } // foreach neighbour

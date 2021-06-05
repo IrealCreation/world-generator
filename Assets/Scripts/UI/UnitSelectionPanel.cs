@@ -16,6 +16,7 @@ public class UnitSelectionPanel : MonoBehaviour
     public Text Infos;
 
     public GameObject CityBuildButton;
+    public GameObject ExploreButton;
 
     public InputController inputController;
     
@@ -34,7 +35,7 @@ public class UnitSelectionPanel : MonoBehaviour
             if (unit.CanBuildCity)
             {
                 CityBuildButton.SetActive(true);
-                if (inputController.SelectedUnit.GetHex().CanBuildCity())
+                if (inputController.SelectedUnit.Hex.CanBuildCity())
                     CityBuildButton.GetComponent<Button>().interactable = true;
                 else
                     CityBuildButton.GetComponent<Button>().interactable = false;
@@ -42,6 +43,19 @@ public class UnitSelectionPanel : MonoBehaviour
             else
             {
                 CityBuildButton.SetActive(false);
+            }
+            
+            if (unit.CanSearch)
+            {
+                ExploreButton.SetActive(true);
+                if (inputController.SelectedUnit.Hex.CanBeSearched(unit.People))
+                    ExploreButton.GetComponent<Button>().interactable = true;
+                else
+                    ExploreButton.GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                ExploreButton.SetActive(false);
             }
         }
     }

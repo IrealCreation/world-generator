@@ -5,13 +5,13 @@ using UnityEngine;
 public class Biome
 {
     public string Name;
-    public Dictionary<string, float> Resources;
+    public Yields Yields;
     public Material Material;
 
-    public Biome(string name, Dictionary<string, float> resources, Material material)
+    public Biome(string name, Yields yields, Material material)
     {
         Name = name;
-        Resources = resources;
+        Yields = yields;
         Material = material;
     }
 }

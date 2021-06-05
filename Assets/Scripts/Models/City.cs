@@ -10,7 +10,7 @@ public class City : MapObject
 	private float overflowedProduction;
 
 	public City(Hex hex, People people, GameObject go) {
-		base.hex = hex;
+		base.Hex = hex;
 		People = people;
 		NameplateColor = People.Color;
 		GO = go;

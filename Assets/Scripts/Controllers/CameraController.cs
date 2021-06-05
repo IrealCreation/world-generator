@@ -123,4 +123,9 @@ public class CameraController : MonoBehaviour
     {
         return this.transform.position;
     }
+
+    public float GetZoom()
+    {
+        return this.transform.position.y;
+    }
 }

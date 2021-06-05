@@ -13,13 +13,13 @@ public class InputController : MonoBehaviour
 
     public bool OnMap; // Is the player watching the map and has access to map interractions (scroll zoom...)
     
-    HexMap hexMap;
+    private HexMap hexMap;
     private Hex hexUnderMouse;
     private Hex hexLastUnderMouse;
     private LineRenderer lineRenderer;
     
-    public UIController uiController;
-    private CameraController CameraController;
+    private ScreenUIController screenUIController;
+    private CameraController cameraController;
 
     Vector3 lastMousePosition; //Position of the mouse on the screen (from Input.mousePosition)
     Vector3 lastHitPos; //Position of the mouse relating to the game ground plane (from MouseRayHitPos())
@@ -31,8 +31,12 @@ public class InputController : MonoBehaviour
         set
         {
             _selectedUnit = value;
-            uiController.SelectUnit(_selectedUnit);
+            screenUIController.SelectUnit(_selectedUnit);
             DrawPath(null);
+            if(_selectedUnit != null && _selectedUnit.CanSearch)
+                hexMap.HighlightSearchableHexes(_selectedUnit.People);
+            else 
+                hexMap.UnhighlightSearchableHexes();
         }
     }
 
@@ -51,7 +55,7 @@ public class InputController : MonoBehaviour
                 Update_CurrentFunc = Update_CityView;
                 
                 //TODO: move the camera to the city
-                Vector3 cityPos = value.GetHex().Position();
+                Vector3 cityPos = value.Hex.Position();
                 //Debug.Log("City position: " + cityPos);
                 //Debug.Log("Camera position: " + Camera.main.GetComponent<CameraController>().GetPosition());
                 //Camera.main.GetComponent<CameraController>().MoveCamera(cityPos);
@@ -62,7 +66,7 @@ public class InputController : MonoBehaviour
             }
             
             _selectedCity = value;
-            uiController.SelectCity(_selectedCity);
+            screenUIController.SelectCity(_selectedCity);
             SelectedUnit = null;
         }
     }
@@ -80,7 +84,8 @@ public class InputController : MonoBehaviour
         hexMap = GameObject.FindObjectOfType<HexMap>();
         lineRenderer = transform.GetComponentInChildren<LineRenderer>();
         lineRenderer.gameObject.SetActive(false);
-        CameraController = Camera.main.GetComponent<CameraController>();
+        cameraController = Camera.main.GetComponent<CameraController>();
+        screenUIController = GameObject.FindObjectOfType<ScreenUIController>();
         
         // Disable the map control until the map is generated
         OnMap = false;
@@ -102,21 +107,25 @@ public class InputController : MonoBehaviour
             
             if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return))
             {
-                uiController.OpenMenu();
+                screenUIController.OpenMenu();
             }
             if (Input.GetKey(KeyCode.R))
             {
-                uiController.GenerateWorld(true);
+                screenUIController.GenerateWorld(true);
             }
             if( Input.GetKey(KeyCode.S) )
             {
                 // Spawn scouts here
                 hexMap.SpawnPeopleAt("Testeurs", true, hexUnderMouse);
-                uiController.ToggleMapInfo(false);
+                screenUIController.ToggleMapInfo(false);
             }
             if(Input.GetKeyDown(KeyCode.Space)) 
             {
                 hexMap.NextTurn();
+            }
+            if(Input.GetKeyDown(KeyCode.Escape)) 
+            {
+                Application.Quit();
             }
             
             //Keyboard camera control
@@ -126,10 +135,10 @@ public class InputController : MonoBehaviour
                 Input.GetAxis("Vertical")
             );
 
-            CameraController.MoveCamera(translate * keyboardMoveSpeed * Time.deltaTime);
+            cameraController.MoveCamera(translate * keyboardMoveSpeed * Time.deltaTime);
             
             // Display informations of the currently hovered hex
-            uiController.SelectHex(hexUnderMouse);
+            screenUIController.SelectHex(hexUnderMouse);
 
             //We call the currently needed Update subfunction
             Update_CurrentFunc();
@@ -229,10 +238,10 @@ public class InputController : MonoBehaviour
         
         // We have a selected unit. Let's pathfind to the hex under mouse, and draw the path
         // But first, is this a different hex from before (or we don't already have a path)?
-        if (hexPath == null || hexUnderMouse == hexLastUnderMouse)
+        if (hexPath == null || hexUnderMouse != hexLastUnderMouse)
         {
             // Do a pathfinding search
-            hexPath = QPath.QPath.FindPath<Hex>(hexMap, SelectedUnit, SelectedUnit.GetHex(), hexUnderMouse, Hex.CostEstimate);
+            hexPath = QPath.QPath.FindPath<Hex>(SelectedUnit, SelectedUnit.Hex, hexUnderMouse, Hex.CostEstimate);
             
             // Draw the path
             DrawPath(hexPath);
@@ -258,7 +267,7 @@ public class InputController : MonoBehaviour
 
         //Camera zoom / dezoom on scroll
         float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
-        CameraController.ZoomCamera(scrollAmount, MouseRayHitPos());
+        cameraController.ZoomCamera(scrollAmount, MouseRayHitPos());
         //CameraController.ZoomCamera_Old(scrollAmount * scrollSpeed);
     }
 
