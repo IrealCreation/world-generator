@@ -13,12 +13,10 @@ public class People
     public readonly string Name;
     public bool IsPlayer;
     public Color Color;
-    
-    public Dictionary<string, float> Resources;
+
+    public Yields YieldsStock;
     public Dictionary<string, int> Interests;
     public Dictionary<string, int> Ethos;
-    public int Expansionism; 
-    public int Bellicosity;
 
     public HashSet<Hex> ExploredHexes { get; protected set; }
     public HashSet<Hex> SearchedHexes { get; protected set; } // Hexes already searched by a scout, giving resources
@@ -44,25 +42,15 @@ public class People
             Explore(startingHex, 3);
         }
         
-        // Instantiate the resources
-        Resources = new Dictionary<string, float>();
-        Resources["food"] = 0;
-        Resources["growth"] = 0;
-        Resources["materials"] = 0;
-        Resources["wealth"] = 0;
-        Resources["military"] = 0;
-        Resources["research"] = 0;
-        Resources["culture"] = 0;
-        Resources["faith"] = 0;
-        Resources["politics"] = 0;
+        YieldsStock = new Yields();
         
         // Instantiate the interests
         Interests = new Dictionary<string, int>();
-        Interests["culture"] = 0;
-        Interests["science"] = 0;
-        Interests["military"] = 0;
-        Interests["economy"] = 0;
-        Interests["growth"] = 0;
+        Interests["culture"] = 0; // "Inspiration"
+        Interests["science"] = 0; // "Curiosity"
+        Interests["military"] = 0; // "Bellicosity"
+        Interests["wealth"] = 0; // "Industry"
+        Interests["food"] = 0; // "Growth"
         
         // Instantiate the political ethos
         Ethos = new Dictionary<string, int>();
@@ -95,7 +83,7 @@ public class People
     {
         SearchedHexes.Add(h);
         HexMap.UpdateHexVisuals(h);
-        // TODO: give resources and event
+        GainYields(h.Resource.Yields);
     }
 
     public void TerritoryAdd(Hex h)
@@ -104,6 +92,12 @@ public class People
             Debug.Log("People "+ Name + " already owns Hex " + h);
         Territory.Add(h);
         HexMap.DrawTerritory(this);
+    }
+
+    public void GainYields(Yields yields)
+    {
+        YieldsStock += yields;
+        HexMap.ScreenUIController.UpdateYieldsStock(YieldsStock);
     }
 
     public override string ToString()

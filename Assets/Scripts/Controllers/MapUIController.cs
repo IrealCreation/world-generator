@@ -61,7 +61,7 @@ public class MapUIController : MonoBehaviour
     public void ShowYields(Hex hex)
     {
         GameObject go;
-        Yields yields = new Yields(hex.GetYields());
+        Yields yields = hex.GetYields();
         
         if (!hexYields.ContainsKey(hex))
         {
@@ -75,64 +75,73 @@ public class MapUIController : MonoBehaviour
         else
         {
             go = hexToBehaviours[hex].gameObject;
-            if (hex.GetYields() == yields)
+            if (yields == hexYields[hex])
                 return; // The yields didn't change, let's exit
         }
         hexYields[hex] = new Yields(yields);
 
-        if(yields.Food < 1)
+        int yield = yields.Food;
+        if(yield < 1)
             go.transform.Find("Food").gameObject.SetActive(false);
         else
         {
-            while (yields.Food > 0)
+            while (yield > 0)
             {
                 go.transform.Find("Food").gameObject.SetActive(true);
                 Instantiate(YieldFoodPrefab, go.transform.Find("Food").transform);
-                yields.Food--;
+                yield--;
             }
         }
-        if(yields.Wealth < 1)
+        
+        yield = yields.Wealth;
+        if(yield < 1)
             go.transform.Find("Wealth").gameObject.SetActive(false);
         else
         {
-            while (yields.Wealth > 0)
+            while (yield > 0)
             {
                 go.transform.Find("Wealth").gameObject.SetActive(true);
                 Instantiate(YieldWealthPrefab, go.transform.Find("Wealth").transform);
-                yields.Wealth--;
+                yield--;
             }
         }
-        if(yields.Military < 1)
+        
+        yield = yields.Military;
+        if(yield < 1)
             go.transform.Find("Military").gameObject.SetActive(false);
         else
         {
-            while (yields.Military > 0)
+            while (yield > 0)
             {
                 go.transform.Find("Military").gameObject.SetActive(true);
                 Instantiate(YieldMilitaryPrefab, go.transform.Find("Military").transform);
-                yields.Military--;
+                yield--;
             }
         }
-        if(yields.Science < 1)
+        
+        yield = yields.Science;
+        if(yield < 1)
             go.transform.Find("Science").gameObject.SetActive(false);
         else
         {
-            while (yields.Science > 0)
+            while (yield > 0)
             {
                 go.transform.Find("Science").gameObject.SetActive(true);
                 Instantiate(YieldSciencePrefab, go.transform.Find("Science").transform);
-                yields.Science--;
+                yield--;
             }
         }
-        if(yields.Culture < 1)
+        
+        yield = yields.Culture;
+        if(yield < 1)
             go.transform.Find("Culture").gameObject.SetActive(false);
         else
         {
-            while (yields.Culture > 0)
+            while (yield > 0)
             {
                 go.transform.Find("Culture").gameObject.SetActive(true);
                 Instantiate(YieldCulturePrefab, go.transform.Find("Culture").transform);
-                yields.Culture--;
+                yield--;
             }
         }
     }

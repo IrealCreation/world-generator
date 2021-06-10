@@ -9,6 +9,7 @@ public class UnitSelectionPanel : MonoBehaviour
     void Start()
     {
         inputController = GameObject.FindObjectOfType<InputController>();
+        hexMap = GameObject.FindObjectOfType<HexMap>();
     }
 
     public Text Title;
@@ -18,7 +19,8 @@ public class UnitSelectionPanel : MonoBehaviour
     public GameObject CityBuildButton;
     public GameObject ExploreButton;
 
-    public InputController inputController;
+    private InputController inputController;
+    private HexMap hexMap;
     
     // Update is called once per frame
     void Update()
@@ -48,7 +50,7 @@ public class UnitSelectionPanel : MonoBehaviour
             if (unit.CanSearch)
             {
                 ExploreButton.SetActive(true);
-                if (inputController.SelectedUnit.Hex.CanBeSearched(unit.People))
+                if (inputController.SelectedUnit.Hex.CanBeSearched(unit.People) && inputController.SelectedUnit.MovePoints > 0)
                     ExploreButton.GetComponent<Button>().interactable = true;
                 else
                     ExploreButton.GetComponent<Button>().interactable = false;
@@ -58,5 +60,11 @@ public class UnitSelectionPanel : MonoBehaviour
                 ExploreButton.SetActive(false);
             }
         }
+    }
+
+    public void Search()
+    {
+        inputController.SelectedUnit.MovePoints--;
+        hexMap.SearchHex(inputController.SelectedUnit.Hex);
     }
 }

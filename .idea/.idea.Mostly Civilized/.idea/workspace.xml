@@ -57,7 +57,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/HexMap_Continent.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/MapObjectUI.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/MapObjectUIBehaviour.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/CameraController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/Biome.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/Resource.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/NameplateBehaviour.cs" />
@@ -66,17 +65,18 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/BuildCityButton.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Behaviours/YieldsBehaviour.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/Yields.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/MapUIController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/ScreenUIController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/PathfindingPriorityQueue.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPath_AStar.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QPath/QPath.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/HexMap_Geology.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/InputController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/Unit.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/CameraController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/ScreenUIController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/Hex.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/People.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UnitSelectionPanel.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Controllers/MapUIController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Models/HexMap.cs" />
       </list>
     </option>

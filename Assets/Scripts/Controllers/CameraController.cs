@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour
     private Vector3 startPosition;
 	private Vector3 oldPosition;
     private Vector3 cameraTargetOffset;
+    private HexMap hexMap;
 
     private bool panorama;
 
@@ -18,12 +19,14 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hexMap = GameObject.FindObjectOfType<HexMap>();
+        SetLimits(hexMap.numRows);
         startPosition = this.transform.position;
         oldPosition = this.transform.position;
         cameraTargetOffset = new Vector3();
         
         // Enable Panorama for the start menu
-        panorama = true;
+        ResetCamera(true);
     }
 
     // Update is called once per frame
@@ -53,6 +56,7 @@ public class CameraController : MonoBehaviour
     		oldPosition = this.transform.position;
 
     		// Update the position of hexes
+            // TODO: optimize this by getting the behaviours from hexMap
     		HexBehaviour[] hexes = GameObject.FindObjectsOfType<HexBehaviour>();
 
     		foreach(HexBehaviour hex in hexes) {

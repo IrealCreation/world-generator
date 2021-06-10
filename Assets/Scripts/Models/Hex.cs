@@ -262,12 +262,12 @@ public class Hex : IQPathTile {
 		else if (Relief.Name == "Mountain")
 		{
 			yields.Food -= 1;
-			if (yields.Wealth > 0)
-				yields.Wealth += 1;
-			else if(yields.Culture > 0)
+			if(yields.Culture > 0)
 				yields.Culture += 1;
 			else if(yields.Science > 0)
 				yields.Science += 1;
+			else
+				yields.Wealth += 1;
 		}
 
 		if (Feature != null && (Feature.Name == "Forest" || Feature.Name == "Jungle"))

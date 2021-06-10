@@ -24,6 +24,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     public GameObject JunglePrefab;
     public GameObject ReefPrefab;
     // Resources
+    public GameObject CoralPrefab;
     public GameObject FishPrefab;
     public GameObject FruitsPrefab;
     public GameObject GeyserPrefab;
@@ -74,6 +75,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
 
     private InputController inputController;
     private MapUIController mapUIController;
+    public ScreenUIController ScreenUIController;
 
     // Start is called before the first frame update
     void Start()
@@ -81,11 +83,12 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    // Get Controllers
 	    inputController = GameObject.FindObjectOfType<InputController>();
 	    mapUIController = GameObject.FindObjectOfType<MapUIController>();
+	    ScreenUIController = GameObject.FindObjectOfType<ScreenUIController>();
 	    
 	    // Instantiate the terrain biomes
 	    biomes = new Dictionary<string, Biome>();
 	    biomes.Add("Coast", new Biome("Coast", 
-		    new Yields(3, 1), 
+		    new Yields(2, 2), 
 		    MatCoast));
 	    biomes.Add("Lake", new Biome("Lake", 
 		    new Yields(3, 1), 
@@ -106,7 +109,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
 		    new Yields(1, 0, 2, 0, 1), 
 		    MatSteppe));
 	    biomes.Add("Temperate", new Biome("Temperate", 
-		    new Yields(2, 2), 
+		    new Yields(2, 1, 0, 0, 1), 
 		    MatTemperate));
 	    biomes.Add("Taiga", new Biome("Taiga", 
 		    new Yields(2, 0, 1, 0, 1), 
@@ -133,12 +136,12 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    
 	    // Instantiate the terrain resources
 	    resources = new Dictionary<string, Resource>();
-	    /*resources.Add("Coral", new Resource("Coral",
-		    new Dictionary<string, float>(){ {"science", 1}, {"culture", 1} },
+	    resources.Add("Coral", new Resource("Coral",
+		    new Yields(0, 0, 0, 1, 1), 
 		    new List<Biome>() { biomes["Coast"] }, 
 		    new List<Relief>() { reliefs["Water"] }, 
 		    hex => (int) (hex.Temperature * 8f - 2),
-		    ReefPrefab, 1));*/
+		    CoralPrefab, 1));
 	    resources.Add("Fish", new Resource("Fish",
 		    new Yields(1, 1), 
 		    new List<Biome>() { biomes["Coast"], biomes["Lake"] }, 
@@ -167,13 +170,13 @@ public class HexMap : MonoBehaviour, IQPathWorld
 		    new Yields(1, 1), 
 		    new List<Biome>() { biomes["Desert"] },
 		    new List<Relief>() { reliefs["Plain"] }, 
-		    hex => (int) (hex.Moisture * 4f + 4f),
+		    hex => (int) (hex.Moisture * 9f + 4f),
 		    OasisPrefab));
 	    resources.Add("Salar", new Resource("Salar",
 		    new Yields(0, 1, 0, 1),
 		    new List<Biome>() { biomes["Desert"], biomes["Steppe"] }, 
 		    new List<Relief>() { reliefs["Plain"] }, 
-		    hex => (int) ((1f - hex.Moisture) * 5f + 1),
+		    hex => (int) ((1f - hex.Moisture) * 6f + 1f),
 		    SalarPrefab));
 	    
 	    StartGame();
@@ -622,9 +625,10 @@ public class HexMap : MonoBehaviour, IQPathWorld
 	    }
     }
 
-    public void SearchHex()
+    public void SearchHex(Hex hex)
     {
-	    CurrentPeople().SearchHex(inputController.SelectedUnit.Hex);
+	    CurrentPeople().SearchHex(hex);
+	    HighlightSearchableHexes(CurrentPeople());
     }
 
     public Hex[] GetHexesWithinRangeOf(Hex centerHex, int range) {

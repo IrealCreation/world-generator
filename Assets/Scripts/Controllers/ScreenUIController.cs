@@ -14,6 +14,12 @@ public class ScreenUIController : MonoBehaviour
     public InputField SeedInput;
     public GameObject StartMenu;
     public GameObject BottomUI;
+    public GameObject PeopleTopBar;
+    private Text yieldsStockFood;
+    private Text yieldsStockWealth;
+    private Text yieldsStockMilitary;
+    private Text yieldsStockScience;
+    private Text yieldsStockCulture;
     public Text CurrentSeedText;
     public Button CloseMenuButton;
     
@@ -29,10 +35,14 @@ public class ScreenUIController : MonoBehaviour
         hexMap = GameObject.FindObjectOfType<HexMap>();
         CameraController = Camera.main.GetComponent<CameraController>();
         canCloseMenu = false; // Cannot close the first starting menu
-        
-        //Initial camera with the panorama
-        CameraController.SetLimits(hexMap.numRows);
-        CameraController.ResetCamera(true);
+
+        // Cache some gameobjects for efficiency
+        Transform yieldsStock = PeopleTopBar.transform.Find("Stock");
+        yieldsStockFood = yieldsStock.Find("Food").GetComponentInChildren<Text>(true);
+        yieldsStockWealth = yieldsStock.Find("Wealth").GetComponentInChildren<Text>(true);
+        yieldsStockMilitary = yieldsStock.Find("Military").GetComponentInChildren<Text>(true);
+        yieldsStockScience = yieldsStock.Find("Science").GetComponentInChildren<Text>(true);
+        yieldsStockCulture = yieldsStock.Find("Culture").GetComponentInChildren<Text>(true);
         
         OpenMenu();
     }
@@ -48,12 +58,9 @@ public class ScreenUIController : MonoBehaviour
         hexMap.ResetMap(seed);
         CurrentSeedText.text = "Current seed: " + seed;
         
-        CameraController.SetLimits(hexMap.numRows);
-        CameraController.ResetCamera();
-        //Debug.Log("MenuController::NewMap()");
-        
         CloseMenu();
         canCloseMenu = true;
+        CameraController.ResetCamera(false);
     }
 
     public void RandomizeSeed()
@@ -80,10 +87,14 @@ public class ScreenUIController : MonoBehaviour
         ToggleYieldsButton.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Switch the UI between "divine map view" (true) or "ingame player view" (false)
+    /// </summary>
     public void ToggleMapInfo(bool active)
     {
         MapInfoPanel.SetActive(active);
         NextTurnButton.gameObject.SetActive(!active);
+        PeopleTopBar.gameObject.SetActive(!active);
     }
 
     public void NextTurn()
@@ -114,5 +125,14 @@ public class ScreenUIController : MonoBehaviour
     public void SelectCity(City city)
     {
         CitySelectionPanel.SetActive(city != null);
+    }
+
+    public void UpdateYieldsStock(Yields yields)
+    {
+        yieldsStockFood.text = yields.Food.ToString();
+        yieldsStockWealth.text = yields.Wealth.ToString();
+        yieldsStockMilitary.text = yields.Military.ToString();
+        yieldsStockScience.text = yields.Science.ToString();
+        yieldsStockCulture.text = yields.Culture.ToString();
     }
 }
