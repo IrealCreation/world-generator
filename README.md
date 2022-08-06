@@ -1,4 +1,4 @@
-# World Generator (a.k.a. Mostly Civilized)
+# World Generator
 ## What is it now...?
 This is a world map generator developed with Unity Game Engine in C#. It is inspired by Quill18's "Mostly Civilized" video series on which it builds upon: https://www.youtube.com/watch?v=j-rCuN7uMR8
 ## What will it be...?
