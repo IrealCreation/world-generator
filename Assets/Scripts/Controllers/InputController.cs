@@ -105,23 +105,23 @@ public class InputController : MonoBehaviour
                 SelectedUnit = null;
             }
             
-            if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
             {
                 screenUIController.OpenMenu();
             }
-            if (Input.GetKey(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 screenUIController.GenerateWorld(true);
             }
-            if( Input.GetKey(KeyCode.S) )
+            if( Input.GetKeyDown(KeyCode.N) )
             {
                 // Spawn scouts here
-                hexMap.SpawnPeopleAt("Testeurs", true, hexUnderMouse);
-                screenUIController.ToggleMapInfo(false);
+                GameController.Main.SpawnPeopleAt("Testeurs", true, hexUnderMouse);
+                screenUIController.ToggleMapInfo(GameController.Main.Omniscience);
             }
             if(Input.GetKeyDown(KeyCode.Space)) 
             {
-                hexMap.NextTurn();
+                GameController.Main.NextTurn();
             }
             if(Input.GetKeyDown(KeyCode.Escape)) 
             {
@@ -146,7 +146,11 @@ public class InputController : MonoBehaviour
             lastMousePosition = Input.mousePosition;
             hexLastUnderMouse = hexUnderMouse;
 
-            Update_ScrollZoom();
+            // Check for map zoom if we're not over a UI element
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                Update_ScrollZoom();
+            }
         }
 
     }
@@ -189,11 +193,15 @@ public class InputController : MonoBehaviour
             {
                 SelectedUnit = units[0];
                 DrawPath(SelectedUnit.GetHexPath());
+                return;
             }
             else
             {
                 SelectedUnit = null;
             }
+            
+            // Are we clicking on a hex in a territory?
+            screenUIController.SelectPeople(hexUnderMouse.People);
 
         }
         else if( Input.GetMouseButton(0) && Input.mousePosition != lastMousePosition ) {

@@ -26,6 +26,30 @@ public class Yields : IEquatable<Yields>
         Culture = model.Culture;
     }
 
+    public int Get(string yield)
+    {
+        switch (yield)
+        {
+            case "food":
+                return Food;
+            case "wealth":
+                return Wealth;
+            case "military":
+                return Military;
+            case "science":
+                return Science;
+            case "culture":
+                return Culture;
+            default:
+                throw new Exception("Invalid Yield Get: " + yield);
+        }
+    }
+
+    public int Sum()
+    {
+        return Food + Wealth + Military + Science + Culture;
+    }
+
     public override bool Equals(object obj) => this.Equals(obj as Yields);
 
     public bool Equals(Yields p)
@@ -59,4 +83,9 @@ public class Yields : IEquatable<Yields>
         return lhs.Equals(rhs);
     }
     public static bool operator !=(Yields lhs, Yields rhs) => !(lhs == rhs);
+
+    public override int GetHashCode()
+    {
+        return Tuple.Create(Food, Wealth, Military, Science, Culture).GetHashCode();
+    }
 }

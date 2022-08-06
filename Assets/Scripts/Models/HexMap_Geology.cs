@@ -185,7 +185,7 @@ public class HexMap_Geology : HexMap
 
 	    foreach(Hex h in areaHexes) {
 
-		    distanceRatio = Hex.Distance(centerHex, h) / range;
+		    distanceRatio = (float)Hex.Distance(centerHex, h) / range;
 		    elevation = centerHeight * Mathf.Lerp( 1f, Random.Range(0, 15) / 100f,  distanceRatio );
 		    variability = (int)((0.5f - Mathf.Abs(distanceRatio - 0.5f)) * 2f * 0.3f * 100f);
 		    modifier = Random.Range(-variability, variability);

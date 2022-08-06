@@ -39,10 +39,13 @@ public class Hex : IQPathTile {
 
 	public HexMap HexMap;
 
-	private Hex[] neighbours; //List of adjacents hexes
+	private Hex[] neighbours; // List of adjacents hexes
+	private HashSet<River> rivers; // List of bordering rivers
 
 	public List<Unit> units;
 	public City city;
+	public People People;
+	public Building Building;
 
 	public static readonly float RADIUS = 1f; //From the middle to the pointy edge
 	public static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3f) / 2f * RADIUS;
@@ -124,7 +127,7 @@ public class Hex : IQPathTile {
 		//Return the PositionFromCamera of the current hex
 		return this.PositionFromCamera( Camera.main.transform.position, this.HexMap.numRows, this.HexMap.numColumns );
 	}
-	public static float Distance(Hex a, Hex b) {
+	public static int Distance(Hex a, Hex b) {
 		// Returns the distance between two hexes
 
 		int dQ = Mathf.Abs(a.Q - b.Q);
@@ -248,6 +251,23 @@ public class Hex : IQPathTile {
 		return false;
 	}
 
+	public HashSet<River> GetRivers()
+	{
+		if (rivers == null)
+		{
+			rivers = new HashSet<River>();
+			foreach (Edge e in GetEdges())
+			{
+				if (e.River != null)
+				{
+					rivers.Add(e.River);
+				}
+			}
+		}
+
+		return rivers;
+	}
+
 	public Yields GetYields()
 	{
 		Yields yields = new Yields(Biome.Yields);
@@ -288,6 +308,27 @@ public class Hex : IQPathTile {
 		return yields;
 	}
 
+	public Building GetBuilding()
+	{
+		return Building;
+	}
+
+	public void SetBuilding(Building building)
+	{
+		Building = building;
+		
+		// Destroy existing feature and building
+		GameObject find = GO.transform.Find("Feature").gameObject;
+		if(find != null)
+			GameObject.Destroy(find);
+		find = GO.transform.Find("Building").gameObject;
+		if(find != null)
+			GameObject.Destroy(find);
+
+		GameObject buildingGO = GameObject.Instantiate(HexMap.ConstructionPrefab, GO.transform);
+		buildingGO.name = "Building";
+	}
+
 	public string Description()
 	{
 		string log = ToString() + ". Elevation: " + Elevation +
@@ -307,10 +348,20 @@ public class Hex : IQPathTile {
 			description += ", River";
 		}
 		
-		description += ".\nElevation: " + (int) (Elevation * 4000) + "m" +
+		description += ".\n \nElevation: " + (int) (Elevation * 4000) + "m" +
 		               "\nTemperature: " + Math.Round(Temperature * 70 - 30, 1) + "°C" +
 		               "\nHumidity: " + Math.Round(Moisture * 100, 1) + "%";
+		
+		if (People != null)
+		{
+			description += "\n \nOwner: " + People.Name + ".";
+		}
 
+		if (Building != null)
+		{
+			description += "\nBuilding: " + Building.Name + ".";
+		}
+		
 		//Debug.Log(log);
 		return description;
 	}

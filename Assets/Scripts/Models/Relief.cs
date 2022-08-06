@@ -5,6 +5,7 @@ public class Relief
 {
     public string Name;
     public int MovementCost; // Additional movement cost of entering this hex
+    public float ExpansionModifier; // Modifier to the expansion desire towards this hex
     public bool IsWater;
     public float ObjectY; // The shift in the Y axis of map objects on top of this relief
     public float SurfaceY; // The shift in the Y axis of surface part of this tile
@@ -12,13 +13,14 @@ public class Relief
     public Mesh MeshSurface;
     public Mesh MeshUnderground;
 
-    public Relief(string name, Mesh meshSurface, Mesh meshUnderground, int movementCost = 0, bool isWater = false, float objectY = 0f, 
+    public Relief(string name, Mesh meshSurface, Mesh meshUnderground, int movementCost = 0, float expansionModifier = 1, bool isWater = false, float objectY = 0f, 
         float surfaceY = 0f, float undergroundY = 0f)
     {
         Name = name;
         MeshSurface = meshSurface;
         MeshUnderground = meshUnderground;
         MovementCost = movementCost;
+        ExpansionModifier = expansionModifier;
         IsWater = isWater;
         ObjectY = objectY;
         SurfaceY = surfaceY;

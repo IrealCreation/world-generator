@@ -351,19 +351,19 @@ public class HexMap_Continent : HexMap
 	    {
 		    if(h.Elevation > mountainElevation)
 		    {
-			    h.Relief = reliefs["Mountain"];
+			    h.Relief = Reliefs["Mountain"];
 		    }
     		else if(h.Elevation > hillElevation) 
 		    {
-			    h.Relief = reliefs["Hill"];
+			    h.Relief = Reliefs["Hill"];
             }
     		else if(h.Elevation > 0) 
 		    {
-			    h.Relief = reliefs["Plain"];
+			    h.Relief = Reliefs["Plain"];
     		}
             else 
 		    {
-			    h.Relief = reliefs["Water"];
+			    h.Relief = Reliefs["Water"];
             }
 	    }
     }
@@ -426,35 +426,35 @@ public class HexMap_Continent : HexMap
 	                taigaScore, tundraScore);
 
                 if (max == tropicalScore)
-	                h.Biome = biomes["Tropical"];
+	                h.Biome = Biomes["Tropical"];
                 else if (max == savannaScore)
-					h.Biome = biomes["Savanna"];
+					h.Biome = Biomes["Savanna"];
                 else if (max == desertScore)
-					h.Biome = biomes["Desert"];
+					h.Biome = Biomes["Desert"];
                 else if (max == steppeScore)
-					h.Biome = biomes["Steppe"];
+					h.Biome = Biomes["Steppe"];
                 else if (max == temperateScore)
-					h.Biome = biomes["Temperate"];
+					h.Biome = Biomes["Temperate"];
                 else if (max == taigaScore)
-					h.Biome = biomes["Taiga"];
+					h.Biome = Biomes["Taiga"];
                 else if (max == tundraScore)
-					h.Biome = biomes["Tundra"];
+					h.Biome = Biomes["Tundra"];
             }
             else
             {
                 if (h.IsSea)
                 {
 	                if(h.Elevation > -0.7) {
-		                h.Biome = biomes["Coast"];
+		                h.Biome = Biomes["Coast"];
 	                }
 	                else
 	                {
-		                h.Biome = biomes["Ocean"];
+		                h.Biome = Biomes["Ocean"];
 	                }
                 }
                 else
                 {
-	                h.Biome = biomes["Lake"];
+	                h.Biome = Biomes["Lake"];
                 }
             }
 
@@ -677,7 +677,7 @@ public class HexMap_Continent : HexMap
 
     	foreach(Hex h in areaHexes) {
 
-    		distanceRatio = Hex.Distance(centerHex, h) / range;
+    		distanceRatio = (float)Hex.Distance(centerHex, h) / range;
     		elevation = centerHeight * Mathf.Lerp( 1f, Random.Range(0, 15) / 100f,  distanceRatio );
             //Debug.Log("Elevation: " + elevation);
 

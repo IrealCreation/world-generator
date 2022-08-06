@@ -9,6 +9,6 @@ public class BuildCityButton : MonoBehaviour
         HexMap map = GameObject.FindObjectOfType<HexMap>();
         InputController inputController = GameObject.FindObjectOfType<InputController>();
         
-        map.SpawnCityAt( map.CityPrefab, map.CurrentPeople(), inputController.SelectedUnit.Hex);
+        map.SpawnCityAt( map.CityPrefab, GameController.Main.CurrentPeople(), inputController.SelectedUnit.Hex);
     }
 }

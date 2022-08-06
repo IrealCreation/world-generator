@@ -58,15 +58,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Behaviours\ChoiceOptionPanelBehaviour.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\HoverTextBehaviour.cs" />
      <Compile Include="Assets\Scripts\Behaviours\MapUIBehaviour.cs" />
      <Compile Include="Assets\Scripts\Behaviours\NameplateBehaviour.cs" />
      <Compile Include="Assets\Scripts\Behaviours\Pointer.cs" />
      <Compile Include="Assets\Scripts\Behaviours\UnitBehaviour.cs" />
      <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
      <Compile Include="Assets\Scripts\Controllers\InputController.cs" />
      <Compile Include="Assets\Scripts\Controllers\MapUIController.cs" />
      <Compile Include="Assets\Scripts\Controllers\ScreenUIController.cs" />
+     <Compile Include="Assets\Scripts\Models\ArtMovement.cs" />
+     <Compile Include="Assets\Scripts\Models\ArtSubject.cs" />
+     <Compile Include="Assets\Scripts\Models\Artwork.cs" />
      <Compile Include="Assets\Scripts\Models\Biome.cs" />
+     <Compile Include="Assets\Scripts\Models\Building.cs" />
+     <Compile Include="Assets\Scripts\Models\BuildingProject.cs" />
+     <Compile Include="Assets\Scripts\Models\Choice.cs" />
+     <Compile Include="Assets\Scripts\Models\ChoiceOption.cs" />
      <Compile Include="Assets\Scripts\Models\City.cs" />
      <Compile Include="Assets\Scripts\Models\CityJob.cs" />
      <Compile Include="Assets\Scripts\Models\Edge.cs" />
@@ -77,11 +87,13 @@
      <Compile Include="Assets\Scripts\Models\HexMap_Continent.cs" />
      <Compile Include="Assets\Scripts\Models\HexMap_Geology.cs" />
      <Compile Include="Assets\Scripts\Models\MapObject.cs" />
+     <Compile Include="Assets\Scripts\Models\Notification.cs" />
      <Compile Include="Assets\Scripts\Models\People.cs" />
      <Compile Include="Assets\Scripts\Models\Relief.cs" />
+     <Compile Include="Assets\Scripts\Models\Research.cs" />
+     <Compile Include="Assets\Scripts\Models\ResearchEra.cs" />
      <Compile Include="Assets\Scripts\Models\Resource.cs" />
      <Compile Include="Assets\Scripts\Models\River.cs" />
-     <Compile Include="Assets\Scripts\Models\Structure.cs" />
      <Compile Include="Assets\Scripts\Models\Unit.cs" />
      <Compile Include="Assets\Scripts\Models\Yields.cs" />
      <Compile Include="Assets\Scripts\QPath\IQPathTile.cs" />

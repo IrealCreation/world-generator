@@ -60,6 +60,7 @@ public class MapUIController : MonoBehaviour
 
     public void ShowYields(Hex hex)
     {
+        return;
         GameObject go;
         Yields yields = hex.GetYields();
         

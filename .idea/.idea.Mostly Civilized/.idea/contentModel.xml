@@ -8,6 +8,8 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="Behaviours" t="Include">
+            <e p="ChoiceOptionPanelBehaviour.cs" t="Include" />
+            <e p="HoverTextBehaviour.cs" t="Include" />
             <e p="MapUIBehaviour.cs" t="Include" />
             <e p="NameplateBehaviour.cs" t="Include" />
             <e p="Pointer.cs" t="Include" />
@@ -15,12 +17,20 @@
           </e>
           <e p="Controllers" t="Include">
             <e p="CameraController.cs" t="Include" />
+            <e p="GameController.cs" t="Include" />
             <e p="InputController.cs" t="Include" />
             <e p="MapUIController.cs" t="Include" />
             <e p="ScreenUIController.cs" t="Include" />
           </e>
           <e p="Models" t="Include">
+            <e p="ArtMovement.cs" t="Include" />
+            <e p="ArtSubject.cs" t="Include" />
+            <e p="Artwork.cs" t="Include" />
             <e p="Biome.cs" t="Include" />
+            <e p="Building.cs" t="Include" />
+            <e p="BuildingProject.cs" t="Include" />
+            <e p="Choice.cs" t="Include" />
+            <e p="ChoiceOption.cs" t="Include" />
             <e p="City.cs" t="Include" />
             <e p="CityJob.cs" t="Include" />
             <e p="Edge.cs" t="Include" />
@@ -31,11 +41,13 @@
             <e p="HexMap_Continent.cs" t="Include" />
             <e p="HexMap_Geology.cs" t="Include" />
             <e p="MapObject.cs" t="Include" />
+            <e p="Notification.cs" t="Include" />
             <e p="People.cs" t="Include" />
             <e p="Relief.cs" t="Include" />
+            <e p="Research.cs" t="Include" />
+            <e p="ResearchEra.cs" t="Include" />
             <e p="Resource.cs" t="Include" />
             <e p="River.cs" t="Include" />
-            <e p="Structure.cs" t="Include" />
             <e p="Unit.cs" t="Include" />
             <e p="Yields.cs" t="Include" />
           </e>
