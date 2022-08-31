@@ -14,7 +14,7 @@ So far, the following features are functionnal:
 - (WIP) The human settlements research technologies, create buildings and make artworks depending of their preferences.
 ## Credits
 Designed and developed by Richard Legrand: https://irealcreation.com  
-3D assets by Sylvain Salviati.  
+3D assets by Sylvain Salviati (the beautiful ones) or Richard Legrand (the ugly ones).  
 ### Thanks to...
 Quill18's "Mostly Civilized: A Hex-Based 4x Game Engine for Unity"  
 Amit Patel's "Polygonal Map Generation for Games"  
