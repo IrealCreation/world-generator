@@ -504,7 +504,9 @@ public class People
 
     public void MakeChoiceAI(Choice choice)
     {
-        //TODO: let the AI make the choice
+        //TODO: program the AI to weight it's options instead of just picking one at random
+        ChoiceOption selectedOption = choice.Options[Random.Range(0, choice.Options.Count)];
+        MakeChoice(choice, selectedOption);
     }
 
     public int BuildingTimeEstimate()

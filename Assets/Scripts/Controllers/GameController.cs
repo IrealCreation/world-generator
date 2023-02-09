@@ -672,6 +672,9 @@ public class GameController : MonoBehaviour
         if (peoples.Count >= colors.Length)
             return false;
         
+        // DEBUG: only the first people added is player, the next ones are AI
+        isPlayer = (peoples.Count == 0);
+        
         People people = new People(names[peoples.Count], colors[peoples.Count], isPlayer, HexMap, hex);
         peoples.Add(people);
         HexMap.SpawnPeopleAt(people, hex);
